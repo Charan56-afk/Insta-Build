@@ -312,6 +312,28 @@
             color: white;
         }
 
+        /* Blinking animation for the Google Sign-in button container & fallback */
+        #google-btn-login, #google-btn-signup {
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        #google-btn-login:hover,
+        #google-btn-signup:hover,
+        #google-btn-login-fallback button:hover,
+        #google-btn-signup-fallback button:hover {
+            animation: google-blink-anim 0.35s infinite alternate ease-in-out;
+        }
+        @keyframes google-blink-anim {
+            0% {
+                opacity: 1;
+                filter: brightness(1.15);
+            }
+            100% {
+                opacity: 0.35;
+                filter: brightness(0.85);
+            }
+        }
+
         .auth-error {
             background: rgba(255, 77, 0, 0.15);
             border: 1px solid rgba(255, 77, 0, 0.3);
