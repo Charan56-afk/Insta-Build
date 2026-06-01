@@ -6453,6 +6453,7 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
             if (!iframe) return;
             let modifiedHtml = html;
             const errorScript = '\x3cscript\x3e' + `
+    // Error tracking
     window.onerror = function(message, source, lineno, colno, error) {
         console.error("Iframe Error:", message, "at", source, ":", lineno);
         window.parent.postMessage({
@@ -6464,6 +6465,39 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
             stack: error?.stack
         }, '*');
     };
+
+    // Lifecycle polyfill to ensure load / DOMContentLoaded events fire even if attached late
+    (function() {
+        const originalAddEventListener = window.addEventListener;
+        window.addEventListener = function(type, listener, options) {
+            if ((type === 'load' || type === 'DOMContentLoaded') && (document.readyState === 'complete' || document.readyState === 'interactive')) {
+                setTimeout(listener, 0);
+            } else {
+                originalAddEventListener.call(window, type, listener, options);
+            }
+        };
+        
+        const originalDocAddEventListener = document.addEventListener;
+        document.addEventListener = function(type, listener, options) {
+            if ((type === 'DOMContentLoaded' || type === 'load') && (document.readyState === 'complete' || document.readyState === 'interactive')) {
+                setTimeout(listener, 0);
+            } else {
+                originalDocAddEventListener.call(document, type, listener, options);
+            }
+        };
+
+        let onloadHandler = null;
+        Object.defineProperty(window, 'onload', {
+            get() { return onloadHandler; },
+            set(handler) {
+                onloadHandler = handler;
+                if (handler && (document.readyState === 'complete' || document.readyState === 'interactive')) {
+                    setTimeout(handler, 0);
+                }
+            },
+            configurable: true
+        });
+    })();
 ` + '\x3c/script\x3e';
             if (modifiedHtml.includes('</head>')) {
                 modifiedHtml = modifiedHtml.replace('</head>', errorScript + '</head>');
@@ -6471,19 +6505,21 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
                 modifiedHtml = errorScript + modifiedHtml;
             }
 
-            try {
-                const res = await fetch(RUNNER_ORIGIN + '/api/preview', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ html: modifiedHtml })
-                });
-                if (res.ok) {
-                    iframe.removeAttribute('srcdoc');
-                    iframe.src = (RUNNER_ORIGIN || window.location.origin) + '/preview?t=' + Date.now();
-                    return;
+            if (window.location.protocol !== 'file:') {
+                try {
+                    const res = await fetch(RUNNER_ORIGIN + '/api/preview', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ html: modifiedHtml })
+                    });
+                    if (res.ok) {
+                        iframe.removeAttribute('srcdoc');
+                        iframe.src = (RUNNER_ORIGIN || window.location.origin) + '/preview?t=' + Date.now();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('Backend preview failed, falling back to srcdoc:', e);
                 }
-            } catch (e) {
-                console.warn('Backend preview failed, falling back to srcdoc:', e);
             }
 
             iframe.removeAttribute('src');
@@ -8502,8 +8538,20 @@ The backend must expose GET and POST /api/items endpoints, persist logs in-memor
                 console.error("Session restoration error:", e);
             }
         }
+
+        function initIframeSandbox() {
+            const iframe = document.getElementById('preview-iframe');
+            if (!iframe) return;
+            if (window.location.protocol === 'file:') {
+                console.log('[InstaBuild] Local file protocol detected. Adjusting sandbox to allow script execution.');
+                iframe.sandbox = "allow-scripts allow-forms allow-popups allow-modals";
+            } else {
+                iframe.sandbox = "allow-scripts allow-same-origin allow-forms allow-popups allow-modals";
+            }
+        }
         initSession();
         loadAuthSettings();
+        initIframeSandbox();
 
         // Handle potential autofills after render
         window.addEventListener('load', () => {
