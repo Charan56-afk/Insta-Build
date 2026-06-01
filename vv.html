@@ -6011,6 +6011,9 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
                     document.getElementById('output-app-name').textContent = '✓ ' + appName + ' — built!';
                 }
 
+                // Automatically save the project silently
+                await saveProject(true);
+
                 checkDailyReset();
                 buildCount++;
                 try {
