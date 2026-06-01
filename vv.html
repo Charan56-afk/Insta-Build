@@ -5523,63 +5523,7 @@ We are raising $1.5M seed funding to scale our engineering team and accelerate c
         }
 
         function handleCineSocialLogin() {
-            const handle = prompt("Enter your CineSocial handle (e.g. @cineuser or admin):", "@cineuser");
-            if (!handle || !handle.trim()) return;
-
-            const cleanHandle = handle.trim();
-            const url = `${cineSocialUrl}/api/profile/${encodeURIComponent(cleanHandle)}`;
-
-            fetch(url)
-                .then(res => {
-                    if (res.status === 404) {
-                        // Try to auto-create the user profile to make testing seamless
-                        return fetch(`${cineSocialUrl}/api/profile`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                handle: cleanHandle,
-                                name: cleanHandle.replace('@', ''),
-                                bio: 'CineSocial Auto-generated Account',
-                                accountType: 'User'
-                            })
-                        }).then(createRes => {
-                            if (!createRes.ok) {
-                                throw new Error(`Profile not found and auto-creation failed with status ${createRes.status}`);
-                            }
-                            return createRes.json();
-                        }).then(data => data.profile);
-                    } else if (!res.ok) {
-                        throw new Error(`CineSocial server returned status ${res.status}`);
-                    }
-                    return res.json();
-                })
-                .then(async (profile) => {
-                    const userObj = {
-                        name: profile.name || cleanHandle,
-                        email: `${cleanHandle.replace('@', '')}@cinesocial.app`,
-                        avatar: profile.avatar || cleanHandle[0]
-                    };
-                    try {
-                        const backendRes = await fetch(RUNNER_ORIGIN + '/api/auth/cinesocial', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(userObj)
-                        });
-                        const backendData = await backendRes.json();
-                        if (backendRes.ok && backendData.token) {
-                            try { localStorage.setItem('ib_token', backendData.token); } catch(e) {}
-                            loginUser(backendData.user);
-                        } else {
-                            loginUser(userObj);
-                        }
-                    } catch (err) {
-                        console.warn("Backend CineSocial sync failed, using client-only session:", err);
-                        loginUser(userObj);
-                    }
-                })
-                .catch(err => {
-                    alert(`CineSocial login failed: ${err.message}\nMake sure your CineSocial server is running at ${cineSocialUrl} (default port 5000).`);
-                });
+            alert("Coming Soon");
         }
 
         function loginUser(user) {
