@@ -6448,7 +6448,7 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
             });
         }
 
-        function writeIframe(html) {
+        async function writeIframe(html) {
             const iframe = document.getElementById('preview-iframe');
             if (!iframe) return;
             let modifiedHtml = html;
@@ -6470,6 +6470,23 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
             } else {
                 modifiedHtml = errorScript + modifiedHtml;
             }
+
+            try {
+                const res = await fetch(RUNNER_ORIGIN + '/api/preview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ html: modifiedHtml })
+                });
+                if (res.ok) {
+                    iframe.removeAttribute('srcdoc');
+                    iframe.src = (RUNNER_ORIGIN || window.location.origin) + '/preview?t=' + Date.now();
+                    return;
+                }
+            } catch (e) {
+                console.warn('Backend preview failed, falling back to srcdoc:', e);
+            }
+
+            iframe.removeAttribute('src');
             iframe.srcdoc = modifiedHtml;
         }
 
