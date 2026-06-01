@@ -2780,7 +2780,7 @@
     </div>
 
     <script>
-        const RUNNER_ORIGIN = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? (window.location.port === '3001' ? '' : 'http://localhost:3001') : '';
+        const RUNNER_ORIGIN = (window.location.port === '3001' || window.location.hostname.includes('onrender.com') || window.location.hostname.includes('render.com')) ? '' : 'http://localhost:3001';
 
         // Catch and report errors to companion runner
         window.onerror = function (message, source, lineno, colno, error) {
