@@ -5831,42 +5831,20 @@ We are raising $1.5M seed funding to scale our engineering team and accelerate c
                         setStep(1, 'active');
                         try {
                             const code = await streamGenerate(
-                                `You are a principal frontend engineer. Generate a beautiful, production-ready, fully interactive, single-file HTML/CSS/JS web application for: "${idea}".
+                                `Generate a production-ready single-file HTML app for: "${idea}".
 
-Follow these CRITICAL engineering rules to make it look and feel like a high-end, premium application (similar to v0 or Lovable):
-1. MODERN TECH STACK & COMPONENTS:
-   - Include Tailwind CSS CDN: \`\\x3cscript src="https://cdn.tailwindcss.com"\\x3e\\x3c/script\\x3e\` in the \`\\x3chead\\x3e\` of your document for styling.
-   - Include Lucide Icons CDN: \`\\x3cscript src="https://unpkg.com/lucide@latest"\\x3e\\x3c/script\\x3e\` to render clean, modern icons. Initialize them using \`lucide.createIcons()\` whenever the DOM updates.
-   - Use Google Fonts (e.g., "Plus Jakarta Sans", "Inter", or "Outfit") for premium typography.
-2. BACKEND INTEGRATION: The backend server runs on "http://localhost:3000". Declare a constant \`const BACKEND_URL = window.location.pathname.startsWith('/deploy/') ? window.location.pathname.split('/').slice(0, 3).join('/') : 'http://localhost:3000';\` at the top of your script. You MUST prefix every fetch call with this URL (e.g., \`fetch(\`\${BACKEND_URL}/api/items\`)\`). Relative paths like \`fetch('/api/...')\` will fail.
-3. CENTRAL STATE MANAGEMENT & REAL-TIME DOM SYNC:
-   - Design the application architecture around a single, centralized \`state\` object (e.g., \`let state = { items: [], user: null, activeTab: 'dashboard', filters: {} }\`).
-   - Implement rendering function(s) (e.g., \`render()\` or specific modular renderers like \`renderItems()\`) that update the HTML DOM elements directly based on the contents of the \`state\` object.
-   - Any user action (button click, form submit, deletion, tab switch) MUST modify the state first, then trigger the render function to sync the UI in real-time.
-4. ROBUST BACKEND-RESILIENT FALLBACK (OFFLINE MODE):
-   - Wrap all network fetch calls to \`BACKEND_URL\` in try-catch interceptors.
-   - If a fetch request fails (e.g., network error, backend offline, timeout, or non-ok status), catch the error, show a brief, elegant toast/alert notification (e.g. "Backend offline - using offline mode"), but CRITICALLY: **proceed with updating the local state and rendering the DOM changes anyway**.
-   - This ensures all buttons (Add, Delete, Edit, Toggle) remain 100% workable and responsive in the preview sandbox even if the runner backend is offline.
-5. NO PLACEHOLDERS OR incomplete JS:
-   - Every single button, form submission, input field, and modal action must have a complete, fully implemented JavaScript handler.
-   - Absolutely no comments like "// TODO: implement delete" or "// business logic goes here". Write all JS code completely.
-6. LAND DIRECTLY ON DASHBOARD BY DEFAULT (MOCK SIGN-IN):
-   - CRITICAL: Log the user in by default in your centralized \`state\` (e.g. \`state.user = { name: "John Smith", email: "john.smith@example.com", avatar: "" }\`) so they land directly on the fully-populated interactive dashboard.
-   - Do NOT lock or hide the main application dashboard behind the authentication screen initially.
-   - Include a functional "Sign out" button on the dashboard that clears \`state.user\` and shows a beautiful centered Authentication Card (with tabs to switch between "Sign in" and "Create account", Google/CineSocial login options, seed credentials helper text, and a "⚡ Quick Demo Login" button to log back in instantly).
-   - This ensures the application is immediately open and fully workable in the sandbox preview.
-7. PREMIUM VISUAL DESIGN, INTERACTIVE GRAPHICS & MEDIA:
-   - Use a modern, cohesive dashboard layout (e.g., a sleek sidebar navigation panel on the left, a top header bar with search/profile details, and a spacious grid area for content).
-   - If the dashboard displays metrics, analytics, or charts, represent them using fully custom, responsive SVGs (with hover states, grids, lines) or canvas elements that dynamically redraw/update when the underlying state updates, rather than static placeholders.
-   - Apply a beautiful theme with balanced colors (deep slates/indigo accent, rich dark modes, or clean glassmorphic panels using Tailwind classes like \`backdrop-blur-md\`, \`bg-white/70\`, \`border-white/20\`).
-   - Add hover transformations, scale micro-animations on interactive cards, and smooth CSS transitions on all active states.
-   - Populate all views with detailed, context-specific example data. Use high-quality image URLs from Unsplash (e.g. https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&h=300).
-8. CONCISE HTML & STATE-DRIVEN DATA POPULATION (CRITICAL TO PREVENT CODE TRUNCATION):
-   - Keep the initial HTML structure skeletal, but YOU MUST write the main layout containers, layout wraps, screen cards (like auth screens or dashboard wrappers), and key button/element IDs directly in the HTML. Do not leave the HTML body empty.
-   - To prevent the generated code from exceeding output token limits and getting truncated (which causes missing \`\\x3c/script\\x3e\` tags and syntax errors), do NOT write hundreds of lines of repetitive, hardcoded HTML elements (like listing multiple identical table rows, lists, or card grids in HTML). Put all seed/example data records in your JavaScript \`state\` arrays, and dynamically generate and inject the HTML DOM elements (like lists, tables, grids) using JS loops/renders on page load.
-   - This keeps the file compact and ensures that the entire code, including the final scripts and closing tags, is generated fully without truncation.
-9. STRICT SIZE LIMIT: Keep the entire generated HTML file concise, under 300 lines of total code. Avoid verbose Tailwind structures or heavy inline SVGs. Focus on core interactivity first.
-10. CODE QUALITY: Start directly with <!DOCTYPE html> and write clean, commented code. Put your <script> tags at the very end of the HTML body (after all DOM nodes are defined), or wrap all script initialization and rendering calls inside a window.onload or DOMContentLoaded listener to ensure the browser has parsed the DOM elements before script selectors execute.`,
+Requirements:
+- Tailwind CSS CDN + Lucide Icons CDN — modern premium look
+- Single <script> at end of body, all JS complete (no TODOs/placeholders)
+- Centralized \`state\` object with render() function updating DOM on every change
+- BACKEND_URL = 'http://localhost:3000'; prefix all fetch calls with it
+- Wrap fetches in try-catch; on failure show toast + update local state anyway (offline-resilient)
+- Auto-login demo user in state so dashboard loads immediately; include Sign Out → auth card with Demo Login button
+- Use Unsplash images for seed data, beautiful glassmorphic/clean Tailwind theme, hover animations
+- Generate data via JS state arrays and render loops — do NOT hardcode dozens of HTML rows
+- DO NOT lock UI behind auth — show dashboard immediately
+
+Output ONLY valid <!DOCTYPE html>... code — no markdown, no explanations.`,
                                 'frontend-output', 'code'
                             );
                             currentBuildData.frontend = code;
@@ -5882,32 +5860,22 @@ Follow these CRITICAL engineering rules to make it look and feel like a high-end
                         setStep(2, 'active');
                         try {
                             const code = await streamGenerate(
-                                `You are a principal backend engineer. Generate a complete, production-quality Node.js/Express API backend for the application.
+                                `Generate a complete Node.js/Express backend for this app idea: "${idea}".
 
-Application Idea: "${idea}"
-
-Here is the FRONTEND HTML/JS code that was generated for this application in the previous step:
+Frontend code (inspect to match API endpoints exactly):
 \`\`\`html
 ${currentBuildData.frontend || ''}
 \`\`\`
 
-Follow these CRITICAL engineering rules:
-1. CORS ENABLEMENT: Import cors and enable it with \`app.use(cors())\` so the frontend running locally can communicate with the API.
-2. API ALIGNMENT & AUTHENTIC ENDPOINTS: You MUST align perfectly with the frontend. Inspect the frontend HTML/JS code above and implement ALL API endpoints it makes requests to, including standard authentication (POST /api/auth/login, POST /api/auth/signup), real-time social authentication endpoints (POST /api/auth/google, POST /api/auth/cinesocial), and all data CRUD/action endpoints (GET, POST, PUT/PATCH, DELETE) requested by the frontend.
-3. FULL CRUD LOGIC: Ensure that any collection manipulation endpoints (e.g., adding, deleting, or updating items) are fully functional. If the frontend requests a deletion (e.g., DELETE /api/items/:id), the backend must locate the item, delete it, and return a clean success message (e.g. { success: true }).
-4. SEED DATA & USERS: Pre-populate your in-memory stores with 5-10 rich, realistic, detailed seed records. Seed 3 realistic users in-memory (including seed profiles that can be logged into via Google or CineSocial handle) to match credentials sent by the frontend's login flows.
-5. PORT SETUP: Listen on the port provided by \`process.env.PORT || 3000\`.
-6. CODE QUALITY: Start directly with the code (no markdown code blocks or conversational text).
-${currentBuildData.useDb ? `7. PERSISTENT DATA STORAGE & SYNCHRONIZATION:
-   - Use the following HTTP-based document store API running at "http://localhost:${window.location.port || 3001}" instead of in-memory arrays. The API supports:
-     \`\`\`
-     GET    /api/data/:collection?appId=YOUR_APP_ID    → Get stored data for a collection
-     POST   /api/data/:collection                      → Save/update data for a collection (body: { appId, data })
-     DELETE /api/data/:collection?appId=YOUR_APP_ID    → Delete a collection
-     \`\`\`
-   - On server startup, initialize/load your collections by calling GET to this persistent store, falling back to seed data if empty.
-   - On any mutation request (POST, PUT, DELETE) from the frontend, update your backend's local state, and immediately write/sync the entire updated collection back to the persistent store using the POST endpoint.
-   - Use the app name slug as the appId. Do not use mongoose or MongoDB directly in the generated code.` : '7. DATA STORAGE: Use in-memory arrays/objects for all data storage. This is fine for prototyping.'}`,
+Rules:
+- require('cors') and app.use(cors())
+- app.listen(process.env.PORT || 3000)
+- Match ALL endpoints the frontend fetches (auth login/signup/google/cinesocial + CRUD routes)
+- Full CRUD — no placeholder handlers, every route complete
+- Seed 5-10 realistic records + 3 demo users in-memory on startup
+- For delete routes: find item, remove, return { success: true }
+${currentBuildData.useDb ? `- Use persistent store at http://localhost:${window.location.port || 3001}/api/data/:collection?appId=SLUG for data instead of in-memory. On startup load from store, on mutation POST back the updated collection.` : '- Use in-memory arrays for storage.'}
+Output raw JS code only — no markdown, no explanations.`,
                                 'backend-output', 'code'
                             );
                             currentBuildData.backend = code;
@@ -6109,7 +6077,7 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
                 const res = await fetch(RUNNER_ORIGIN + '/api/ai/stream', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt, maxTokens: 8192 })
+                    body: JSON.stringify({ prompt, maxTokens: 32768 })
                 });
 
                 const reader = res.body.getReader();
@@ -6237,7 +6205,7 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
                 const res = await fetch(RUNNER_ORIGIN + '/api/ai/stream', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt, maxTokens: 8192 })
+                    body: JSON.stringify({ prompt, maxTokens: 32768 })
                 });
 
                 const reader = res.body.getReader();
@@ -6466,8 +6434,17 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
         }, '*');
     };
 
+    // Polyfill lucide if CDN fails to prevent ReferenceError crash
+    try {
+        if (typeof window.lucide === 'undefined') {
+            window.lucide = {
+                createIcons: function() { console.log('Lucide CDN offline - skipped icon render'); }
+            };
+        }
+    } catch (e) {}
+
     // Lifecycle polyfill to ensure load / DOMContentLoaded events fire even if attached late
-    (function() {
+    try {
         const originalAddEventListener = window.addEventListener;
         window.addEventListener = function(type, listener, options) {
             if ((type === 'load' || type === 'DOMContentLoaded') && (document.readyState === 'complete' || document.readyState === 'interactive')) {
@@ -6497,7 +6474,9 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
             },
             configurable: true
         });
-    })();
+    } catch (e) {
+        console.warn('Lifecycle polyfill failed to initialize:', e);
+    }
 ` + '\x3c/script\x3e';
             if (modifiedHtml.includes('</head>')) {
                 modifiedHtml = modifiedHtml.replace('</head>', errorScript + '</head>');
