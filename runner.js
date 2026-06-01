@@ -79,6 +79,10 @@ function loadBackendInProcess(code) {
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+app.use((req, res, next) => {
+  console.log(`[Request] ${req.method} ${req.url}`);
+  next();
+});
 
 // ===== INSTANT BUILD: reload backend code in-process =====
 app.post('/run', async (req, res) => {
