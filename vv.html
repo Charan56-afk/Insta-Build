@@ -4740,14 +4740,32 @@ We are raising $1.5M seed funding to scale our engineering team and accelerate c
             }
         }
 
-        function handleDemo() {
+        async function handleDemo() {
             useMockMode = true;
             apiKey = '';
             try {
                 localStorage.setItem('ib_mock_mode', 'true');
                 localStorage.removeItem('ib_api_key');
             } catch { }
-            loginUser({ name: 'Demo User', email: 'demo@instabuild.ai' });
+
+            const userObj = { name: 'Demo User', email: 'demo@instabuild.ai', avatar: '' };
+            try {
+                const res = await fetch(RUNNER_ORIGIN + '/api/auth/cinesocial', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userObj)
+                });
+                const data = await res.json();
+                if (res.ok && data.token) {
+                    try { localStorage.setItem('ib_token', data.token); } catch(e) {}
+                    loginUser(data.user);
+                } else {
+                    loginUser(userObj);
+                }
+            } catch (err) {
+                console.warn("Backend demo sync failed, using client-only session:", err);
+                loginUser(userObj);
+            }
         }
 
         // ===== REAL GOOGLE SIGN-IN (GIS SDK) =====
@@ -5528,12 +5546,29 @@ We are raising $1.5M seed funding to scale our engineering team and accelerate c
                     }
                     return res.json();
                 })
-                .then(profile => {
-                    loginUser({
+                .then(async (profile) => {
+                    const userObj = {
                         name: profile.name || cleanHandle,
                         email: `${cleanHandle.replace('@', '')}@cinesocial.app`,
                         avatar: profile.avatar || cleanHandle[0]
-                    });
+                    };
+                    try {
+                        const backendRes = await fetch(RUNNER_ORIGIN + '/api/auth/cinesocial', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(userObj)
+                        });
+                        const backendData = await backendRes.json();
+                        if (backendRes.ok && backendData.token) {
+                            try { localStorage.setItem('ib_token', backendData.token); } catch(e) {}
+                            loginUser(backendData.user);
+                        } else {
+                            loginUser(userObj);
+                        }
+                    } catch (err) {
+                        console.warn("Backend CineSocial sync failed, using client-only session:", err);
+                        loginUser(userObj);
+                    }
                 })
                 .catch(err => {
                     alert(`CineSocial login failed: ${err.message}\nMake sure your CineSocial server is running at ${cineSocialUrl} (default port 5000).`);
