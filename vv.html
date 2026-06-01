@@ -318,9 +318,14 @@
             transition: all 0.2s;
         }
         #google-btn-login:hover,
-        #google-btn-signup:hover,
+        #google-btn-signup:hover {
+            animation: google-blink-anim 0.35s infinite alternate ease-in-out;
+        }
         #google-btn-login-fallback button:hover,
         #google-btn-signup-fallback button:hover {
+            background: rgba(66, 133, 244, 0.1) !important;
+            border-color: rgba(66, 133, 244, 0.4) !important;
+            color: #88b5ff !important;
             animation: google-blink-anim 0.35s infinite alternate ease-in-out;
         }
         @keyframes google-blink-anim {
@@ -1575,7 +1580,7 @@
                     <div id="google-btn-login" style="display:flex; justify-content:center; min-height:44px;"></div>
                     <div id="google-btn-login-fallback" style="display:none;">
                         <button class="oauth-btn" onclick="handleGoogleLogin()"
-                            style="width:100%; padding:11px; font-size:13px;">
+                            style="width:100%; padding:10px; font-size:13px; border-color: rgba(66, 133, 244, 0.25); background: rgba(66, 133, 244, 0.04); color: #66a0ff;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px;">
                                 <path
@@ -1632,7 +1637,7 @@
                     <div id="google-btn-signup" style="display:flex; justify-content:center; min-height:44px;"></div>
                     <div id="google-btn-signup-fallback" style="display:none;">
                         <button class="oauth-btn" onclick="handleGoogleLogin()"
-                            style="width:100%; padding:11px; font-size:13px;">
+                            style="width:100%; padding:10px; font-size:13px; border-color: rgba(66, 133, 244, 0.25); background: rgba(66, 133, 244, 0.04); color: #66a0ff;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:6px;">
                                 <path
@@ -4832,32 +4837,6 @@ We are raising $1.5M seed funding to scale our engineering team and accelerate c
                     cancel_on_tap_outside: true
                 });
 
-                // Render the official Google button in the login form
-                const loginBtn = document.getElementById('google-btn-login');
-                if (loginBtn && loginBtn.children.length === 0) {
-                    google.accounts.id.renderButton(loginBtn, {
-                        theme: 'outline',
-                        size: 'large',
-                        width: 340,
-                        text: 'signin_with',
-                        shape: 'rectangular',
-                        logo_alignment: 'left'
-                    });
-                }
-
-                // Render in signup form too
-                const signupBtn = document.getElementById('google-btn-signup');
-                if (signupBtn && signupBtn.children.length === 0) {
-                    google.accounts.id.renderButton(signupBtn, {
-                        theme: 'outline',
-                        size: 'large',
-                        width: 340,
-                        text: 'signup_with',
-                        shape: 'rectangular',
-                        logo_alignment: 'left'
-                    });
-                }
-
                 // Show One Tap prompt (appears as overlay like major apps)
                 google.accounts.id.prompt((notification) => {
                     if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
@@ -4865,6 +4844,9 @@ We are raising $1.5M seed funding to scale our engineering team and accelerate c
                         console.log('One Tap not shown:', notification.getNotDisplayedReason() || notification.getSkippedReason());
                     }
                 });
+
+                // Always use custom styled fallback buttons
+                showGoogleFallback();
 
             } catch (err) {
                 console.warn('GIS init error:', err);
