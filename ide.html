@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InstaBuild IDE - Real-time Code Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1e1e1e; color: #d4d4d4; }
+        
+        .ide-container { display: flex; height: 100vh; flex-direction: column; }
+        .ide-header { background: #252526; padding: 10px 20px; border-bottom: 1px solid #3e3e42; display: flex; justify-content: space-between; align-items: center; }
+        .ide-header h1 { font-size: 18px; color: #fff; }
+        .header-buttons { display: flex; gap: 10px; }
+        .btn { padding: 8px 16px; background: #0e639c; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; transition: background 0.3s; }
+        .btn:hover { background: #1177bb; }
+        .btn-secondary { background: #464647; }
+        .btn-secondary:hover { background: #5a5a5a; }
+        
+        .ide-main { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 250px; background: #252526; border-right: 1px solid #3e3e42; display: flex; flex-direction: column; }
+        .file-explorer { flex: 1; overflow-y: auto; padding: 10px; }
+        .file-tree-header { padding: 10px; font-size: 12px; font-weight: bold; color: #a0a0a0; display: flex; justify-content: space-between; align-items: center; }
+        .file-tree-header button { background: none; border: none; color: #a0a0a0; cursor: pointer; font-size: 12px; padding: 4px; }
+        .file-tree-header button:hover { color: #fff; }
+        .file-item { padding: 5px 10px; font-size: 13px; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 8px; margin: 2px 0; border-radius: 3px; transition: background 0.2s; }
+        .file-item:hover { background: #2d2d30; }
+        .file-item.active { background: #094771; color: #fff; }
+        .file-item-icon { width: 16px; text-align: center; }
+        .file-item-name { flex: 1; }
+        .sidebar-footer { padding: 10px; border-top: 1px solid #3e3e42; font-size: 11px; color: #a0a0a0; }
+        
+        .editor-container { flex: 1; display: flex; gap: 1px; background: #1e1e1e; }
+        .editor-pane { flex: 1; display: flex; flex-direction: column; background: #252526; min-width: 300px; }
+        .editor-tabs { background: #252526; border-bottom: 1px solid #3e3e42; display: flex; height: 35px; overflow-x: auto; }
+        .editor-tab { padding: 8px 15px; font-size: 13px; color: #a0a0a0; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+        .editor-tab:hover { background: #2d2d30; }
+        .editor-tab.active { color: #fff; border-bottom-color: #007acc; background: #1e1e1e; }
+        .editor-tab-close { width: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; }
+        
+        #monaco-editor { flex: 1; }
+        
+        .preview-pane { flex: 1; display: flex; flex-direction: column; background: #1e1e1e; min-width: 300px; border-left: 1px solid #3e3e42; }
+        .preview-header { background: #252526; padding: 10px 15px; border-bottom: 1px solid #3e3e42; font-size: 13px; font-weight: bold; }
+        #preview-frame { flex: 1; border: none; background: #fff; }
+        
+        .status-bar { background: #007acc; color: #fff; padding: 4px 15px; font-size: 12px; display: flex; justify-content: space-between; height: 24px; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #252526; padding: 30px; border-radius: 8px; min-width: 400px; border: 1px solid #3e3e42; }
+        .modal-header { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #fff; }
+        .modal-input { width: 100%; padding: 10px; background: #1e1e1e; border: 1px solid #3e3e42; color: #d4d4d4; border-radius: 4px; margin-bottom: 15px; font-size: 13px; }
+        .modal-input:focus { outline: none; border-color: #007acc; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
+    </style>
+</head>
+<body>
+    <div class="ide-container">
+        <div class="ide-header">
+            <h1><i class="fas fa-code"></i> InstaBuild IDE</h1>
+            <div class="header-buttons">
+                <button class="btn" id="save-btn"><i class="fas fa-save"></i> Save</button>
+                <button class="btn" id="deploy-btn"><i class="fas fa-rocket"></i> Deploy</button>
+            </div>
+        </div>
+
+        <div class="ide-main">
+            <div class="sidebar">
+                <div class="file-explorer">
+                    <div class="file-tree-header">
+                        <span>FILES</span>
+                        <button id="new-file-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <div id="file-tree"></div>
+                </div>
+                <div class="sidebar-footer">
+                    <span id="sync-status">● Connected</span>
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-pane">
+                    <div class="editor-tabs" id="editor-tabs"></div>
+                    <div id="monaco-editor"></div>
+                </div>
+                <div class="preview-pane">
+                    <div class="preview-header">PREVIEW</div>
+                    <iframe id="preview-frame"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span id="file-info">No file selected</span>
+            <span id="cursor-pos">Ln 1, Col 1</span>
+        </div>
+    </div>
+
+    <div class="modal" id="new-file-modal">
+        <div class="modal-content">
+            <div class="modal-header">Create New File</div>
+            <input type="text" class="modal-input" id="new-file-name" placeholder="index.html" autofocus>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn" onclick="createFile()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    <script>
+        // Get project ID from URL or use default
+        const projectId = new URLSearchParams(window.location.search).get('project') || 'default';
+        let editor = null;
+        let openFiles = {};
+        let currentFile = null;
+
+        // Initialize Monaco Editor
+        require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
+        require(['vs/editor/editor.main'], function() {
+            editor = monaco.editor.create(document.getElementById('monaco-editor'), {
+                value: '// Create or open a file to start coding\n',
+                language: 'javascript',
+                theme: 'vs-dark',
+                automaticLayout: true
+            });
+            
+            editor.onDidChangeModelContent(() => updatePreview());
+            loadProject();
+        });
+
+        // Load project files
+        async function loadProject() {
+            try {
+                const res = await fetch(`/api/ide/files/${projectId}`);
+                const data = await res.json();
+                if (data.files) {
+                    openFiles = {};
+                    data.files.forEach(file => openFiles[file.path] = file.content);
+                    renderFileTree();
+                }
+            } catch (err) {
+                console.error('Failed to load project:', err);
+            }
+        }
+
+        // Render file tree
+        function renderFileTree() {
+            const tree = document.getElementById('file-tree');
+            tree.innerHTML = '';
+            Object.keys(openFiles).forEach(path => {
+                const div = document.createElement('div');
+                div.className = 'file-item' + (currentFile === path ? ' active' : '');
+                div.innerHTML = `<span class="file-item-icon"><i class="fas fa-file"></i></span><span>${path}</span>`;
+                div.onclick = () => openFile(path);
+                tree.appendChild(div);
+            });
+        }
+
+        // Open file
+        function openFile(path) {
+            currentFile = path;
+            editor.setValue(openFiles[path] || '');
+            const ext = path.split('.').pop();
+            const langMap = { js: 'javascript', html: 'html', css: 'css', json: 'json', py: 'python', ts: 'typescript' };
+            monaco.editor.setModelLanguage(editor.getModel(), langMap[ext] || 'plaintext');
+            renderFileTree();
+            updateTabs();
+        }
+
+        // Update tabs
+        function updateTabs() {
+            const tabs = document.getElementById('editor-tabs');
+            tabs.innerHTML = '';
+            Object.keys(openFiles).forEach(path => {
+                const tab = document.createElement('div');
+                tab.className = 'editor-tab' + (currentFile === path ? ' active' : '');
+                tab.innerHTML = `<span>${path}</span><span class="editor-tab-close">✕</span>`;
+                tab.onclick = () => openFile(path);
+                tab.querySelector('.editor-tab-close').onclick = (e) => {
+                    e.stopPropagation();
+                    closeFile(path);
+                };
+                tabs.appendChild(tab);
+            });
+        }
+
+        // Close file
+        function closeFile(path) {
+            delete openFiles[path];
+            if (currentFile === path) {
+                currentFile = Object.keys(openFiles)[0] || null;
+                if (currentFile) openFile(currentFile);
+            }
+            renderFileTree();
+            updateTabs();
+        }
+
+        // Create file
+        function createFile() {
+            const name = document.getElementById('new-file-name').value.trim();
+            if (!name) return alert('File name required');
+            if (openFiles[name]) return alert('File already exists');
+            openFiles[name] = '';
+            saveProject();
+            currentFile = name;
+            renderFileTree();
+            updateTabs();
+            openFile(name);
+            closeModal();
+        }
+
+        // Save project
+        async function saveProject() {
+            try {
+                for (const [path, content] of Object.entries(openFiles)) {
+                    await fetch(`/api/ide/files/${projectId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ path, content })
+                    });
+                }
+                alert('Project saved!');
+            } catch (err) {
+                alert('Save failed: ' + err.message);
+            }
+        }
+
+        // Update preview
+        async function updatePreview() {
+            if (!currentFile || !currentFile.endsWith('.html')) return;
+            const content = editor.getValue();
+            try {
+                await fetch(`/api/ide/files/${projectId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path: currentFile, content })
+                });
+                const frame = document.getElementById('preview-frame');
+                frame.srcdoc = content;
+            } catch (err) {
+                console.error('Preview update failed:', err);
+            }
+        }
+
+        // Modal
+        function closeModal() {
+            document.getElementById('new-file-modal').classList.remove('active');
+            document.getElementById('new-file-name').value = '';
+        }
+
+        // Event listeners
+        document.getElementById('new-file-btn').onclick = () => {
+            document.getElementById('new-file-modal').classList.add('active');
+            document.getElementById('new-file-name').focus();
+        };
+
+        document.getElementById('save-btn').onclick = saveProject;
+        document.getElementById('deploy-btn').onclick = () => {
+            saveProject();
+            const frame = document.getElementById('preview-frame');
+            if (currentFile && currentFile.endsWith('.html')) {
+                frame.src = frame.src;
+            }
+        };
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveProject();
+            }
+        });
+    </script>
+</body>
+</html>

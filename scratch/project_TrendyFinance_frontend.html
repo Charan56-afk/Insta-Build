@@ -1,0 +1,186 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Stock Market App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300,400,500,700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400,600,700&amp;display=swap">
+</head>
+<body class="bg-gray-100 font-sans p-6">
+    <div id="alert"></div>
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h1 class="text-2xl font-bold text-gray-800">TrendyFinance Stock Tracker</h1>
+            <div>
+                <button id="login-modal-toggle" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Login Modal</button>
+                <button id="create-account-modal-toggle" class="bg-green-500 text-white px-4 py-2 rounded mr-2">Sign Up Modal</button>
+                <button id="quick-demo-login-modal-toggle" class="bg-yellow-500 text-white px-4 py-2 rounded">Quick Login Modal</button>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="dashboard">
+                <!-- Dashboard rendered here -->
+            </div>
+            
+            <div class="space-y-4">
+                <div id="login-modal" class="hidden"></div>
+                <div id="create-account-modal" class="hidden"></div>
+                <div id="quick-demo-login-modal" class="hidden"></div>
+            </div>
+        </div>
+        
+        <div class="mt-6 border-t pt-4 flex justify-end space-x-2">
+            <button id="login-btn" class="bg-blue-600 text-white px-4 py-2 rounded">Sign In (Mock)</button>
+            <button id="logout-btn" class="bg-red-600 text-white px-4 py-2 rounded">Sign Out</button>
+        </div>
+    </div>
+    <!-- Central state management and real-time DOM sync -->
+    <script>
+        const BACKEND_URL = window.location.pathname.startsWith('/deploy/') ? window.location.pathname.split('/').slice(0, 3).join('/') : 'http://localhost:3000';
+        let state = {
+            items: [],
+            user: null,
+            activeTab: 'dashboard',
+            filters: {}
+        };
+
+        // Rendering function
+        const render = () => {
+            document.getElementById('items-list').innerHTML = '';
+            state.items.forEach(item => {
+                const itemElement = `
+                    <div class="bg-white rounded-md shadow-lg p-4 mb-4">
+                        <h2 class="text-gray-900 font-bold">${item.name}</h2>
+                        <p>${item.description}</p>
+                    </div>
+                `;
+                document.getElementById('items-list').innerHTML += itemElement;
+            });
+        };
+
+        // Fetching data from backend
+        const fetchData = async (url) => {
+            try {
+                const response = await fetch(`${BACKEND_URL}/${url}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                // Show toast alert
+                showAlert('Backend offline - using offline mode');
+                return [];
+            }
+        };
+
+        // Handling user authentication
+        const handleLogin = async () => {
+            // Simulate login
+            state.user = { name: "John Smith", email: "john.smith@example.com", avatar: "" };
+            render();
+        };
+
+        const handleLogout = () => {
+            state.user = null;
+            render();
+        };
+
+        // Rendering the dashboard
+        const renderDashboard = () => {
+            document.getElementById('dashboard').innerHTML = `
+                <div class="bg-white rounded-md shadow-lg p-4 mb-4">
+                    <h2 class="text-gray-900 font-bold">Dashboard</h2>
+                    ${state.user ? `<p>Welcome, ${state.user.name}</p>` : ''}
+                    ${state.items.length > 0 ? '<ul id="items-list"></ul>' : ''}
+                </div>
+            `;
+        };
+
+        // Rendering the login modal
+        const renderLoginModal = () => {
+            document.getElementById('login-modal').innerHTML = `
+                <div class="bg-white rounded-md shadow-lg p-4 mb-4">
+                    <h2 class="text-gray-900 font-bold">Log in</h2>
+                    <p>Sign in with Google or CineSocial:</p>
+                    <button class="btn btn-primary" onclick="handleLogin()">Google</button>
+                    <button class="btn btn-primary" onclick="handleLogin()">CineSocial</button>
+                </div>
+            `;
+        };
+
+        // Rendering the create account modal
+        const renderCreateAccountModal = () => {
+            document.getElementById('create-account-modal').innerHTML = `
+                <div class="bg-white rounded-md shadow-lg p-4 mb-4">
+                    <h2 class="text-gray-900 font-bold">Sign up</h2>
+                    <p>Enter your email and create a password:</p>
+                    <input type="email" id="email" placeholder="Email" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+            `;
+        };
+
+        // Rendering the quick demo login modal
+        const renderQuickDemoLoginModal = () => {
+            document.getElementById('quick-demo-login-modal').innerHTML = `
+                <div class="bg-white rounded-md shadow-lg p-4 mb-4">
+                    <h2 class="text-gray-900 font-bold">Quick Demo Login</h2>
+                    <p>Enter your email and password:</p>
+                    <input type="email" id="quick-demo-email" placeholder="Email" required>
+                    <input type="password" id="quick-demo-password" placeholder="Password" required>
+                </div>
+            `;
+        };
+
+        // Showing an alert
+        const showAlert = (message) => {
+            const alertElement = `
+                <div class="bg-yellow-50 rounded-md shadow-lg p-4 mb-4">
+                    <p>${message}</p>
+                </div>
+            `;
+            document.getElementById('alert').innerHTML += alertElement;
+            setTimeout(() => {
+                document.getElementById('alert').innerHTML = '';
+            }, 3000);
+        };
+
+        // Fetching initial data
+        fetchData('items')
+            .then(data => {
+                state.items = data;
+                render();
+            })
+            .catch(error => console.error('Error fetching items:', error));
+
+        // Handling user actions
+        document.getElementById('login-btn').addEventListener('click', handleLogin);
+        document.getElementById('logout-btn').addEventListener('click', handleLogout);
+
+        // Rendering the initial dashboard
+        renderDashboard();
+
+        // Rendering modals when needed
+        document.getElementById('login-modal-toggle').addEventListener('click', () => {
+            document.getElementById('login-modal').classList.toggle('hidden');
+        });
+
+        document.getElementById('create-account-modal-toggle').addEventListener('click', () => {
+            document.getElementById('create-account-modal').classList.toggle('hidden');
+        });
+
+        document.getElementById('quick-demo-login-modal-toggle').addEventListener('click', () => {
+            document.getElementById('quick-demo-login-modal').classList.toggle('hidden');
+        });
+    </script>
+
+</body></html>

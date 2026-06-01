@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumTrade: Premium Trading Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-green {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+        }
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- AUTHENTICATION SCREEN -->
+    <div id="auth-screen" class="flex-1 flex items-center justify-center p-6">
+        <div class="glass-panel w-full max-w-md p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl"></div>
+            
+            <div class="text-center mb-8 relative">
+                <div class="inline-flex p-3 bg-gradient-to-tr from-blue-600 to-emerald-500 rounded-xl mb-3 shadow-lg shadow-blue-500/20">
+                    <i data-lucide="trending-up" class="w-8 h-8 text-white"></i>
+                </div>
+                <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">QuantumTrade</h1>
+                <p class="text-gray-400 text-sm mt-1">Invest in the future with zero commission</p>
+            </div>
+
+            <!-- Tab Headers -->
+            <div class="flex border-b border-gray-800 mb-6">
+                <button id="tab-login" class="flex-1 pb-3 text-sm font-semibold border-b-2 border-blue-500 text-white transition-all">Sign In</button>
+                <button id="tab-signup" class="flex-1 pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-all">Create Account</button>
+            </div>
+
+            <!-- Forms -->
+            <form id="auth-form" class="space-y-4">
+                <div id="name-field" class="hidden">
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+                        <input type="text" id="auth-name" class="w-full bg-gray-900/50 border border-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl py-3 pl-10 pr-4 outline-none text-white transition" placeholder="John Doe">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
+                    <div class="relative">
+                        <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+                        <input type="email" id="auth-email" required class="w-full bg-gray-900/50 border border-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl py-3 pl-10 pr-4 outline-none text-white transition" placeholder="you@example.com">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Password</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+                        <input type="password" id="auth-password" required class="w-full bg-gray-900/50 border border-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl py-3 pl-10 pr-4 outline-none text-white transition" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <button type="submit" id="auth-submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="flex items-center my-6">
+                <div class="flex-1 border-t border-gray-800"></div>
+                <span class="px-3 text-xs text-gray-500 uppercase tracking-wider">Or continue with</span>
+                <div class="flex-1 border-t border-gray-800"></div>
+            </div>
+
+            <!-- Social Logins -->
+            <div class="grid grid-cols-2 gap-4">
+                <button id="btn-google" class="flex items-center justify-center gap-2 py-3 px-4 bg-gray-900/50 hover:bg-gray-800 border border-gray-800 hover:border-gray-700 rounded-xl transition text-sm font-medium">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M12 5.04c1.62 0 3.08.56 4.22 1.65l3.15-3.15C17.45 1.76 14.93 1 12 1 7.37 1 3.42 3.65 1.55 7.55l3.69 2.87C6.12 7.5 8.8 5.04 12 5.04z"/>
+                        <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.47h6.46c-.28 1.48-1.12 2.74-2.38 3.59l3.68 2.85c2.16-1.99 3.43-4.91 3.43-8.55z"/>
+                        <path fill="#FBBC05" d="M5.24 14.58c-.24-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29L1.55 7.13C.56 9.1 0 11.29 0 12.7s.56 3.6 1.55 5.57l3.69-2.87z"/>
+                        <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.92l-3.68-2.85c-1.02.68-2.33 1.09-3.96 1.09-3.2 0-5.88-2.46-6.76-5.38l-3.69 2.87C3.42 20.35 7.37 23 12 23z"/>
+                    </svg>
+                    Google
+                </button>
+                <button id="btn-cinesocial" class="flex items-center justify-center gap-2 py-3 px-4 bg-gray-900/50 hover:bg-gray-800 border border-gray-800 hover:border-gray-700 rounded-xl transition text-sm font-medium">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i>
+                    CineSocial
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN (HIDDEN BY DEFAULT) -->
+    <div id="main-app" class="hidden flex-1 flex flex-col md:flex-row overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-gray-900/90 border-r border-gray-800 flex flex-col shrink-0">
+            <!-- Header/Logo -->
+            <div class="p-6 border-b border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-gradient-to-tr from-blue-600 to-emerald-500 rounded-lg">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">QuantumTrade</span>
+                </div>
+            </div>
+
+            <!-- User Info Summary -->
+            <div class="p-4 mx-4 my-4 bg-gray-800/40 rounded-xl border border-gray-800">
+                <div class="flex items-center gap-3">
+                    <img id="user-avatar" class="w-10 h-10 rounded-full border border-gray-700" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80" alt="Avatar">
+                    <div class="overflow-hidden">
+                        <p id="user-name" class="font-semibold text-sm truncate">Loading User...</p>
+                        <p id="user-role" class="text-xs text-emerald-400 flex items-center gap-1">
+                            <span class="inline-block w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Live Trading
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 px-4 space-y-1">
+                <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl bg-blue-600 text-white transition">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+                </button>
+                <button onclick="switchView('markets')" id="nav-markets" class="nav-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl text-gray-400 hover:bg-gray-800/40 hover:text-white transition">
+                    <i data-lucide="line-chart" class="w-5 h-5"></i> Markets
+                </button>
+                <button onclick="switchView('transactions')" id="nav-transactions" class="nav-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl text-gray-400 hover:bg-gray-800/40 hover:text-white transition">
+                    <i data-lucide="history" class="w-5 h-5"></i> Transactions
+                </button>
+                <button onclick="switchView('profile')" id="nav-profile" class="nav-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl text-gray-400 hover:bg-gray-800/40 hover:text-white transition">
+                    <i data-lucide="user-cog" class="w-5 h-5"></i> Settings
+                </button>
+            </nav>
+
+            <!-- Bottom Actions -->
+            <div class="p-4 border-t border-gray-800">
+                <button id="btn-logout" class="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gray-800/50 hover:bg-red-950/20 hover:text-red-400 border border-gray-800 hover:border-red-900/30 rounded-xl transition text-sm font-semibold">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Viewport -->
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-8">
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="view space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-white">Portfolio Command</h2>
+                        <p class="text-gray-400 text-sm">Real-time valuation of your holdings</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="loadPortfolioData()" class="bg-gray-800/80 hover:bg-gray-700 border border-gray-700 text-gray-200 p-2.5 rounded-xl transition" title="Refresh portfolio">
+                            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                        </button>
+                        <button onclick="switchView('markets')" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg transition">
+                            Explore Markets
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl glow-blue relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 text-blue-500/5"><i data-lucide="wallet" class="w-24 h-24"></i></div>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Cash Balance</p>
+                        <h3 id="stat-balance" class="text-3xl font-bold mt-2 text-white">$100,000.00</h3>
+                        <p class="text-xs text-gray-400 mt-2">Available for immediate trading</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 text-indigo-500/5"><i data-lucide="bar-chart-3" class="w-24 h-24"></i></div>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Portfolio Assets</p>
+                        <h3 id="stat-assets-val" class="text-3xl font-bold mt-2 text-white">$0.00</h3>
+                        <p class="text-xs text-gray-400 mt-2">Market value of holding assets</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 text-emerald-500/5"><i data-lucide="percent" class="w-24 h-24"></i></div>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Net Value</p>
+                        <h3 id="stat-total-val" class="text-3xl font-bold mt-2 text-white">$100,000.00</h3>
+                        <p id="stat-net-change" class="text-xs text-emerald-400 mt-2 font-medium flex items-center gap-1">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i> +0.00% Net Profit
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Assets Holdings Table -->
+                    <div class="glass-panel p-6 rounded-2xl lg:col-span-2">
+                        <div class="flex justify-between items-center mb-6">
+                            <h4 class="text-lg font-bold text-white">Your Holdings</h4>
+                            <span class="text-xs bg-gray-800 text-gray-400 px-3 py-1 rounded-full border border-gray-700">Diversified</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-gray-800 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                        <th class="pb-3">Asset</th>
+                                        <th class="pb-3">Holdings</th>
+                                        <th class="pb-3">Avg Price</th>
+                                        <th class="pb-3">Current Price</th>
+                                        <th class="pb-3">Total Value</th>
+                                        <th class="pb-3 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="holdings-list" class="divide-y divide-gray-800/50 text-sm">
+                                    <tr>
+                                        <td colspan="6" class="py-8 text-center text-gray-500">No holdings yet. Go to Markets to make your first trade!</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Market Movers Mini list -->
+                    <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <h4 class="text-lg font-bold text-white">Watchlist</h4>
+                                <span class="text-xs text-blue-400 flex items-center gap-1 font-semibold cursor-pointer" onclick="switchView('markets')">
+                                    View All <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </span>
+                            </div>
+                            <div id="mini-watchlist" class="space-y-4">
+                                <!-- Stocks load here -->
+                                <div class="flex justify-between items-center py-2 animate-pulse">
+                                    <div class="w-24 h-4 bg-gray-800 rounded"></div>
+                                    <div class="w-16 h-4 bg-gray-800 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Beautiful SVG Portfolio donut visualization -->
+                        <div class="mt-6 border-t border-gray-800 pt-6 flex items-center justify-between">
+                            <div class="w-24 h-24 flex items-center justify-center relative">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="#1f2937" stroke-width="2.5"></circle>
+                                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="70 30" stroke-dashoffset="0"></circle>
+                                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="30 70" stroke-dashoffset="-70"></circle>
+                                </svg>
+                                <div class="absolute text-center">
+                                    <span class="text-[10px] font-bold text-gray-400">ALLOCATION</span>
+                                </div>
+                            </div>
+                            <div class="text-xs space-y-2">
+                                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 bg-blue-500 rounded-full"></span> Stocks</div>
+                                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span> Cryptos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: MARKETS -->
+            <div id="view-markets" class="view space-y-6 hidden">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-white">Live Markets</h2>
+                    <p class="text-gray-400 text-sm">Real-time asset prices and instant order matching</p>
+                </div>
+
+                <!-- Filters & Search -->
+                <div class="flex flex-col md:flex-row gap-4 justify-between items-center bg-gray-900/40 p-4 rounded-xl border border-gray-800/80">
+                    <div class="relative w-full md:w-80">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                        <input type="text" id="market-search" oninput="filterMarkets()" class="w-full bg-gray-950 border border-gray-800 focus:border-blue-500 rounded-xl py-2 pl-10 pr-4 outline-none text-white text-sm" placeholder="Search asset or ticker...">
+                    </div>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <button onclick="filterType('all')" id="btn-filter-all" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-xl bg-blue-600 text-white transition">All</button>
+                        <button onclick="filterType('stock')" id="btn-filter-stock" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-xl bg-gray-800 text-gray-300 hover:text-white transition">Stocks</button>
+                        <button onclick="filterType('crypto')" id="btn-filter-crypto" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-xl bg-gray-800 text-gray-300 hover:text-white transition">Crypto</button>
+                    </div>
+                </div>
+
+                <!-- Markets Table -->
+                <div class="glass-panel rounded-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-900/50 border-b border-gray-800 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                    <th class="p-6">Asset Name</th>
+                                    <th class="p-6">Ticker</th>
+                                    <th class="p-6">Price</th>
+                                    <th class="p-6">24h Change</th>
+                                    <th class="p-6">Performance</th>
+                                    <th class="p-6 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="markets-list" class="divide-y divide-gray-800/50 text-sm">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: TRANSACTIONS -->
+            <div id="view-transactions" class="view space-y-6 hidden">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-white">Order History</h2>
+                    <p class="text-gray-400 text-sm">Audited record of all processed transactions</p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-800 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                    <th class="pb-3">Date</th>
+                                    <th class="pb-3">Type</th>
+                                    <th class="pb-3">Asset</th>
+                                    <th class="pb-3">Shares / Units</th>
+                                    <th class="pb-3">Execution Price</th>
+                                    <th class="pb-3">Total Value</th>
+                                    <th class="pb-3 text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-list" class="divide-y divide-gray-800/50 text-sm">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: SETTINGS -->
+            <div id="view-profile" class="view space-y-6 hidden">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-white">Account Settings</h2>
+                    <p class="text-gray-400 text-sm">Manage configuration and sandbox funds</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl space-y-4">
+                        <h4 class="text-lg font-bold text-white">Profile Details</h4>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Email</p>
+                            <p id="profile-email" class="text-white font-medium">you@example.com</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Full Name</p>
+                            <p id="profile-name" class="text-white font-medium">John Doe</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl space-y-4">
+                        <h4 class="text-lg font-bold text-white">Sandbox Actions</h4>
+                        <p class="text-sm text-gray-400">Reset your balance to start over or add more test cash to your balance.</p>
+                        <div class="flex gap-4">
+                            <button onclick="resetBalance(100000)" class="flex-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 py-3 rounded-xl font-semibold transition">
+                                Reset to $100K
+                            </button>
+                            <button onclick="resetBalance(500000)" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 py-3 rounded-xl font-semibold transition">
+                                Set to $500K
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- TRADE MODAL -->
+    <div id="trade-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-6 z-50">
+        <div class="glass-panel w-full max-w-md p-6 rounded-2xl shadow-2xl relative">
+            <button onclick="closeTradeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 id="modal-trade-title" class="text-xl font-extrabold text-white mb-2">Buy Tesla</h3>
+            <p id="modal-stock-ticker" class="text-xs text-gray-400 uppercase tracking-wider mb-6">TSLA - $185.00</p>
+            
+            <form id="trade-form" class="space-y-4">
+                <input type="hidden" id="trade-symbol">
+                <input type="hidden" id="trade-action">
+                
+                <div class="flex justify-between items-center bg-gray-950 p-4 rounded-xl border border-gray-850">
+                    <div>
+                        <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Available balance</p>
+                        <p id="trade-avail-bal" class="text-white font-bold">$100,000.00</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Position size</p>
+                        <p id="trade-avail-shares" class="text-white font-bold">0.00 Shares</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Shares Count</label>
+                    <input type="number" id="trade-quantity" step="any" min="0.0001" required oninput="calculateTotal()" class="w-full bg-gray-900/50 border border-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl py-3 px-4 outline-none text-white text-lg font-bold" placeholder="0">
+                </div>
+
+                <div class="flex justify-between items-center py-2 border-t border-gray-800 mt-6">
+                    <span class="text-sm text-gray-400">Total Execution Price</span>
+                    <span id="trade-est-total" class="text-2xl font-bold text-white">$0.00</span>
+                </div>
+
+                <button type="submit" id="btn-submit-trade" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold py-3.5 rounded-xl shadow-lg transition">
+                    Submit Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CORE JS LOGIC -->
+    <script>
+        const BACKEND_URL = window.location.pathname.startsWith('/deploy/') ? window.location.pathname.split('/').slice(0, 3).join('/') : 'http://localhost:3000';
+        
+        let currentUser = null;
+        let activeTab = 'login';
+        let activeView = 'dashboard';
+        let stockList = [];
+        let holdingsList = [];
+        let filterCategory = 'all';
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+            checkSession();
+            // Start updating live stock pricing slightly for live feel
+            setInterval(fetchLiveStockPrices, 4000);
+        });
+
+        function checkSession() {
+            const token = localStorage.getItem('qt_token');
+            const userStr = localStorage.getItem('qt_user');
+            if (token && userStr) {
+                try {
+                    currentUser = JSON.parse(userStr);
+                    showDashboard();
+                } catch (e) {
+                    logout();
+                }
+            } else {
+                showAuth();
+            }
+        }
+
+        // View Switcher
+        function switchView(viewName) {
+            activeView = viewName;
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            const target = document.getElementById('view-' + viewName);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('bg-blue-600', 'text-white');
+                b.classList.add('text-gray-400');
+            });
+            const activeBtn = document.getElementById('nav-' + viewName);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-400');
+                activeBtn.classList.add('bg-blue-600', 'text-white');
+            }
+
+            if (viewName === 'dashboard') loadPortfolioData();
+            if (viewName === 'markets') fetchLiveStockPrices();
+            if (viewName === 'transactions') loadTransactions();
+            
+            // Re-render lucide icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('user-avatar').src = currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80';
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            
+            switchView('dashboard');
+        }
+
+        function showAuth() {
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('qt_token');
+            localStorage.removeItem('qt_user');
+            currentUser = null;
+            showAuth();
+        }
+
+        document.getElementById('btn-logout').addEventListener('click', logout);
+
+        // AUTH ACTIONS
+        function initAuth() {
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+            const nameField = document.getElementById('name-field');
+            const authSubmit = document.getElementById('auth-submit');
+            
+            tabLogin.addEventListener('click', () => {
+                activeTab = 'login';
+                tabLogin.className = "flex-1 pb-3 text-sm font-semibold border-b-2 border-blue-500 text-white transition-all";
+                tabSignup.className = "flex-1 pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-all";
+                nameField.classList.add('hidden');
+                authSubmit.textContent = "Sign In";
+            });
+
+            tabSignup.addEventListener('click', () => {
+                activeTab = 'signup';
+                tabSignup.className = "flex-1 pb-3 text-sm font-semibold border-b-2 border-blue-500 text-white transition-all";
+                tabLogin.className = "flex-1 pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-all";
+                nameField.classList.remove('hidden');
+                authSubmit.textContent = "Create Account";
+            });
+
+            document.getElementById('auth-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('auth-email').value;
+                const password = document.getElementById('auth-password').value;
+                const name = document.getElementById('auth-name').value;
+                
+                const url = `${BACKEND_URL}/api/auth/${activeTab === 'login' ? 'login' : 'signup'}`;
+                const body = activeTab === 'login' ? { email, password } : { name, email, password };
+                
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Authentication failed');
+                    
+                    localStorage.setItem('qt_token', data.token);
+                    localStorage.setItem('qt_user', JSON.stringify(data.user));
+                    currentUser = data.user;
+                    showDashboard();
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
+
+            // Social Logins integration
+            document.getElementById('btn-google').addEventListener('click', () => {
+                if (window.self !== window.top) {
+                    window.parent.postMessage({ type: 'request-google-login' }, '*');
+                } else {
+                    alert("Mock Google Authentication: Signing in with Google Sandbox...");
+                    mockSocialLogin("Google Sandbox User", "google-user@qt-sandbox.com", "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=80&h=80");
+                }
+            });
+
+            window.addEventListener('message', async (e) => {
+                if (e.data && e.data.type === 'google-login-success') {
+                    // Sync Google user with the backend
+                    try {
+                        const res = await fetch(`${BACKEND_URL}/api/auth/google`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ credential: e.data.credential })
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            localStorage.setItem('qt_token', data.token);
+                            localStorage.setItem('qt_user', JSON.stringify(data.user));
+                            currentUser = data.user;
+                            showDashboard();
+                        }
+                    } catch (err) {
+                        console.error('Google sync failed:', err);
+                    }
+                }
+            });
+
+            document.getElementById('btn-cinesocial').addEventListener('click', async () => {
+                const handle = prompt("Enter your CineSocial Handle (e.g. trader_guru):");
+                if (!handle) return;
+                
+                // Get CineSocial Host URL from local storage
+                const cinesocialHost = window.parent.localStorage.getItem('ib_cinesocial_url') || localStorage.getItem('ib_cinesocial_url') || 'http://localhost:5000';
+                
+                try {
+                    let csUser = null;
+                    try {
+                        const csRes = await fetch(`${cinesocialHost}/api/profile/${handle}`);
+                        if (csRes.ok) {
+                            csUser = await csRes.json();
+                        } else if (csRes.status === 404) {
+                            // Register on-the-fly
+                            const regRes = await fetch(`${cinesocialHost}/api/profile`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    handle,
+                                    name: handle.charAt(0).toUpperCase() + handle.slice(1) + " Pro",
+                                    bio: "A premier trader synced via CineSocial gateway.",
+                                    accountType: "premium"
+                                })
+                            });
+                            if (regRes.ok) {
+                                csUser = await regRes.json();
+                            }
+                        }
+                    } catch (e) {
+                        console.warn("CineSocial server connection failed. Defaulting to sandbox flow.");
+                    }
+
+                    const profilePayload = csUser ? {
+                        name: csUser.name,
+                        email: `${handle}@cinesocial-hub.com`,
+                        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${handle}`
+                    } : {
+                        name: handle.charAt(0).toUpperCase() + handle.slice(1),
+                        email: `${handle}@cinesocial-sandbox.com`,
+                        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${handle}`
+                    };
+
+                    const res = await fetch(`${BACKEND_URL}/api/auth/cinesocial`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(profilePayload)
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message);
+                    
+                    localStorage.setItem('qt_token', data.token);
+                    localStorage.setItem('qt_user', JSON.stringify(data.user));
+                    currentUser = data.user;
+                    showDashboard();
+                } catch (err) {
+                    alert("CineSocial login failed: " + err.message);
+                }
+            });
+        }
+
+        async function mockSocialLogin(name, email, avatar) {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/auth/cinesocial`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, avatar })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('qt_token', data.token);
+                    localStorage.setItem('qt_user', JSON.stringify(data.user));
+                    currentUser = data.user;
+                    showDashboard();
+                }
+            } catch (err) {
+                alert("Sandbox Social Login failed.");
+            }
+        }
+
+        // GET PORTFOLIO HOLDINGS & DETAILS
+        async function loadPortfolioData() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/portfolio`, {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('qt_token') }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                document.getElementById('stat-balance').textContent = '$' + data.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('stat-assets-val').textContent = '$' + data.assetsValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                
+                const totalVal = data.balance + data.assetsValue;
+                document.getElementById('stat-total-val').textContent = '$' + totalVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                const diff = totalVal - 100000;
+                const pct = (diff / 100000) * 100;
+                const changeEl = document.getElementById('stat-net-change');
+                if (diff >= 0) {
+                    changeEl.className = "text-xs text-emerald-400 mt-2 font-semibold flex items-center gap-1";
+                    changeEl.innerHTML = `<i data-lucide="trending-up" class="w-4 h-4"></i> +` + pct.toFixed(2) + "% Net Profit";
+                } else {
+                    changeEl.className = "text-xs text-red-400 mt-2 font-semibold flex items-center gap-1";
+                    changeEl.innerHTML = `<i data-lucide="trending-down" class="w-4 h-4"></i> ` + pct.toFixed(2) + "% Net Loss";
+                }
+
+                holdingsList = data.holdings || [];
+                renderHoldings();
+            } catch (err) {
+                console.error("Portfolio fetch failed:", err);
+            }
+        }
+
+        function renderHoldings() {
+            const tbody = document.getElementById('holdings-list');
+            if (holdingsList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-gray-500">No holdings yet. Go to Markets to make your first trade!</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = holdingsList.map(h => {
+                const totalHoldingVal = h.quantity * h.currentPrice;
+                return `
+                    <tr class="hover:bg-gray-800/20 transition">
+                        <td class="py-4 font-bold text-white flex items-center gap-2">
+                            <span class="p-1.5 bg-gray-800 rounded-lg text-xs text-blue-400">\${h.type === 'crypto' ? '🪙' : '📈'}</span>
+                            \${h.name}
+                        </td>
+                        <td class="py-4">\${h.quantity.toFixed(4)}</td>
+                        <td class="py-4">$\${h.avgPrice.toFixed(2)}</td>
+                        <td class="py-4 font-semibold text-gray-300">$\${h.currentPrice.toFixed(2)}</td>
+                        <td class="py-4 font-bold text-white">$\${totalHoldingVal.toFixed(2)}</td>
+                        <td class="py-4 text-right">
+                            <button onclick="openTradeModal('\${h.symbol}', 'SELL')" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 px-3 py-1 rounded-lg text-xs font-semibold transition">
+                                Sell
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // LIVE STOCK PRICES & MARKETS
+        async function fetchLiveStockPrices() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/stocks`);
+                const data = await res.json();
+                if (!res.ok) throw new Error();
+                stockList = data;
+                
+                renderWatchlist();
+                if (activeView === 'markets') {
+                    renderMarkets();
+                }
+            } catch (err) {
+                console.error("Stocks fetch failed:", err);
+            }
+        }
+
+        function renderWatchlist() {
+            const container = document.getElementById('mini-watchlist');
+            const items = stockList.slice(0, 4);
+            container.innerHTML = items.map(s => {
+                const changeClass = s.change24h >= 0 ? 'text-emerald-400' : 'text-red-400';
+                const sign = s.change24h >= 0 ? '+' : '';
+                return `
+                    <div class="flex justify-between items-center py-1">
+                        <div>
+                            <p class="font-bold text-sm">\${s.symbol}</p>
+                            <p class="text-[10px] text-gray-500">\${s.name}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-sm">$\${s.price.toFixed(2)}</p>
+                            <p class="text-xs \${changeClass}">\${sign}\${s.change24h.toFixed(2)}%</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMarkets() {
+            const tbody = document.getElementById('markets-list');
+            const searchVal = document.getElementById('market-search').value.toLowerCase();
+            
+            let filtered = stockList;
+            if (filterCategory !== 'all') {
+                filtered = filtered.filter(s => s.type === filterCategory);
+            }
+            if (searchVal) {
+                filtered = filtered.filter(s => s.name.toLowerCase().includes(searchVal) || s.symbol.toLowerCase().includes(searchVal));
+            }
+
+            tbody.innerHTML = filtered.map(s => {
+                const changeClass = s.change24h >= 0 ? 'text-emerald-400' : 'text-red-400';
+                const sign = s.change24h >= 0 ? '+' : '';
+                
+                // SVG small sparkline visualization
+                const isUp = s.change24h >= 0;
+                const pathColor = isUp ? '#10b981' : '#ef4444';
+                const sparklinePath = isUp 
+                    ? "M 0,25 Q 10,10 20,20 T 40,5 T 60,18" 
+                    : "M 0,5 Q 10,20 20,10 T 40,25 T 60,22";
+
+                return `
+                    <tr class="hover:bg-gray-800/10 transition">
+                        <td class="p-6 font-bold text-white flex items-center gap-3">
+                            <span class="p-2 bg-gray-800 rounded-xl text-lg">\${s.type === 'crypto' ? '🪙' : '📈'}</span>
+                            <div>
+                                <p class="text-sm font-bold text-white">\${s.name}</p>
+                                <p class="text-xs text-gray-500">\${s.type.toUpperCase()}</p>
+                            </div>
+                        </td>
+                        <td class="p-6 font-semibold text-gray-400">\${s.symbol}</td>
+                        <td class="p-6 font-extrabold text-white">$\${s.price.toFixed(2)}</td>
+                        <td class="p-6 font-bold \${changeClass}">\${sign}\${s.change24h.toFixed(2)}%</td>
+                        <td class="p-6">
+                            <svg class="w-16 h-8 overflow-visible" viewBox="0 0 60 30">
+                                <path d="\${sparklinePath}" fill="none" stroke="\${pathColor}" stroke-width="2" stroke-linecap="round"></path>
+                            </svg>
+                        </td>
+                        <td class="p-6 text-right">
+                            <div class="flex justify-end gap-2">
+                                <button onclick="openTradeModal('\${s.symbol}', 'BUY')" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition">
+                                    Buy
+                                </button>
+                                <button onclick="openTradeModal('\${s.symbol}', 'SELL')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-2 rounded-xl text-xs font-semibold border border-gray-700 transition">
+                                    Sell
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterType(category) {
+            filterCategory = category;
+            document.querySelectorAll('#view-markets btn-filter-all, #view-markets button').forEach(b => {
+                b.classList.remove('bg-blue-600', 'text-white');
+                b.classList.add('bg-gray-800', 'text-gray-300');
+            });
+            
+            const activeBtn = document.getElementById('btn-filter-' + category);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-gray-800', 'text-gray-300');
+                activeBtn.classList.add('bg-blue-600', 'text-white');
+            }
+            renderMarkets();
+        }
+
+        function filterMarkets() {
+            renderMarkets();
+        }
+
+        // TRANSACTION HISTORY
+        async function loadTransactions() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/transactions`, {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('qt_token') }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error();
+
+                const tbody = document.getElementById('transactions-list');
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-gray-500">No transactions recorded yet.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = data.reverse().map(t => {
+                    const typeClass = t.type === 'BUY' ? 'bg-blue-900/30 text-blue-400' : 'bg-red-900/30 text-red-400';
+                    const dateStr = new Date(t.timestamp).toLocaleDateString() + ' ' + new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return `
+                        <tr class="hover:bg-gray-800/10 transition">
+                            <td class="py-4 text-gray-400 font-medium">\${dateStr}</td>
+                            <td class="py-4">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold \${typeClass}">\${t.type}</span>
+                            </td>
+                            <td class="py-4 font-semibold text-white">\${t.symbol}</td>
+                            <td class="py-4">\${t.quantity.toFixed(4)}</td>
+                            <td class="py-4">$\${t.price.toFixed(2)}</td>
+                            <td class="py-4 font-bold text-white">$\${(t.price * t.quantity).toFixed(2)}</td>
+                            <td class="py-4 text-right text-emerald-400 font-semibold flex justify-end items-center gap-1">
+                                <i data-lucide="check-circle-2" class="w-4 h-4"></i> Complete
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                if (window.lucide) lucide.createIcons();
+            } catch (e) {
+                console.error("Transactions loading failed:", e);
+            }
+        }
+
+        // SETTINGS & CASH ACTIONS
+        async function resetBalance(amount) {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/trade`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('qt_token')
+                    },
+                    body: JSON.stringify({ action: 'RESET_BALANCE', quantity: amount, symbol: 'CASH' })
+                });
+                if (res.ok) {
+                    alert("Sandbox Balance successfully updated to $" + amount.toLocaleString());
+                    loadPortfolioData();
+                }
+            } catch (e) {
+                alert("Failed to reset balance.");
+            }
+        }
+
+        // TRADE EXECUTION
+        function openTradeModal(symbol, action) {
+            const stock = stockList.find(s => s.symbol === symbol);
+            if (!stock) return;
+
+            const existingHolding = holdingsList.find(h => h.symbol === symbol);
+            const heldQty = existingHolding ? existingHolding.quantity : 0;
+
+            document.getElementById('trade-symbol').value = symbol;
+            document.getElementById('trade-action').value = action;
+            document.getElementById('modal-trade-title').textContent = `\${action === 'BUY' ? 'Buy' : 'Sell'} \${stock.name}`;
+            document.getElementById('modal-stock-ticker').textContent = `\${stock.symbol} - $\${stock.price.toFixed(2)}`;
+            document.getElementById('trade-avail-shares').textContent = heldQty.toFixed(4) + " Shares";
+            document.getElementById('trade-quantity').value = '';
+            document.getElementById('trade-est-total').textContent = '$0.00';
+
+            const submitBtn = document.getElementById('btn-submit-trade');
+            if (action === 'BUY') {
+                submitBtn.className = "w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold py-3.5 rounded-xl shadow-lg transition";
+                submitBtn.textContent = "Submit Buy Order";
+            } else {
+                submitBtn.className = "w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-semibold py-3.5 rounded-xl shadow-lg transition";
+                submitBtn.textContent = "Submit Sell Order";
+            }
+
+            // Get available cash
+            const balText = document.getElementById('stat-balance').textContent.replace('$', '').replace(/,/g, '');
+            document.getElementById('trade-avail-bal').textContent = '$' + parseFloat(balText).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            document.getElementById('trade-modal').className = "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 z-50 animate-fade-in";
+            
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function closeTradeModal() {
+            document.getElementById('trade-modal').classList.add('hidden');
+        }
+
+        function calculateTotal() {
+            const qty = parseFloat(document.getElementById('trade-quantity').value) || 0;
+            const symbol = document.getElementById('trade-symbol').value;
+            const stock = stockList.find(s => s.symbol === symbol);
+            if (!stock) return;
+
+            const total = qty * stock.price;
+            document.getElementById('trade-est-total').textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        document.getElementById('trade-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const symbol = document.getElementById('trade-symbol').value;
+            const action = document.getElementById('trade-action').value;
+            const quantity = parseFloat(document.getElementById('trade-quantity').value);
+
+            if (isNaN(quantity) || quantity <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/trade`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('qt_token')
+                    },
+                    body: JSON.stringify({ symbol, action, quantity })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || "Order rejected.");
+
+                alert(`Order matching complete! Successfully \${action === 'BUY' ? 'bought' : 'sold'} \${quantity} units of \${symbol}.`);
+                closeTradeModal();
+                loadPortfolioData();
+            } catch (err) {
+                alert("Order Execution Error: " + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sign-In Setup — InstaBuild</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;700;800;900&family=Instrument+Sans:wght@400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      background: #0d0d0f;
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .logo-mark {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: #ff4d00;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-name {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      color: white;
+    }
+    h1 {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 36px;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.45);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .steps-container {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.3s;
+      position: relative;
+    }
+    .step.active {
+      border-color: rgba(255,77,0,0.4);
+      background: rgba(255,77,0,0.04);
+    }
+    .step.done {
+      border-color: rgba(0,168,107,0.3);
+      background: rgba(0,168,107,0.03);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 1.25rem;
+    }
+    .step-num {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      color: rgba(255,255,255,0.4);
+      flex-shrink: 0;
+    }
+    .step.active .step-num {
+      background: #ff4d00;
+      border-color: #ff4d00;
+      color: white;
+    }
+    .step.done .step-num {
+      background: #00a86b;
+      border-color: #00a86b;
+      color: white;
+    }
+    .step-title {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: rgba(255,255,255,0.6);
+    }
+    .step.active .step-title { color: white; }
+    .step.done .step-title { color: rgba(255,255,255,0.7); }
+
+    .step-body {
+      padding-left: 52px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 1.25rem;
+      line-height: 1.7;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 22px;
+      border-radius: 12px;
+      background: #ff4d00;
+      color: white;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: #e64400; transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 22px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+    .btn-google {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      border-radius: 12px;
+      background: white;
+      color: #202124;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .btn-google:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.4); transform: translateY(-1px); }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .client-id-input {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: white;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .client-id-input:focus { border-color: #ff4d00; }
+    .client-id-input::placeholder { color: rgba(255,255,255,0.2); }
+    .client-id-input.valid { border-color: #00a86b; }
+    .client-id-input.invalid { border-color: #ff4d00; }
+
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.5;
+    }
+    .checklist-item::before {
+      content: '→';
+      color: #ff4d00;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .code-box {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      color: #4285F4;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .code-box:hover { border-color: rgba(66,133,244,0.4); }
+    .copy-hint { font-size: 11px; color: rgba(255,255,255,0.25); font-family: 'Instrument Sans', sans-serif; }
+
+    .notice {
+      background: rgba(255,184,0,0.06);
+      border: 1px solid rgba(255,184,0,0.2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .notice strong { color: #ffb800; }
+
+    .success-banner {
+      display: none;
+      background: rgba(0,168,107,0.1);
+      border: 1px solid rgba(0,168,107,0.3);
+      border-radius: 14px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .success-banner h3 {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: #00a86b;
+      margin-bottom: 6px;
+    }
+    .success-banner p { font-size: 14px; color: rgba(255,255,255,0.6); }
+
+    .validation-msg {
+      font-size: 13px;
+      margin-bottom: 12px;
+      font-family: 'Fira Code', monospace;
+    }
+    .validation-msg.ok { color: #00a86b; }
+    .validation-msg.err { color: #ff6644; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: rgba(255,255,255,0.7); }
+
+    .progress-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transition: all 0.3s;
+    }
+    .dot.active { background: #ff4d00; width: 24px; border-radius: 4px; }
+    .dot.done { background: #00a86b; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">
+      <div class="logo-mark">IB</div>
+      <div class="logo-name">InstaBuild</div>
+    </div>
+    <h1>Enable Real Google Sign-In</h1>
+    <p class="subtitle">Follow these steps to connect your Google account — exactly like Instagram &amp; Facebook. Takes ~2 minutes.</p>
+  </div>
+
+  <div class="progress-dots">
+    <div class="dot active" id="dot-1"></div>
+    <div class="dot" id="dot-2"></div>
+    <div class="dot" id="dot-3"></div>
+  </div>
+
+  <div class="steps-container">
+
+    <div id="success-banner" class="success-banner">
+      <h3>✅ Google Sign-In is Ready!</h3>
+      <p>Your Client ID has been saved. Real Google login is now active in InstaBuild.</p>
+      <br>
+      <a class="btn-primary" href="http://localhost:3001" style="display:inline-flex;">
+        ← Go to InstaBuild &amp; Sign In
+      </a>
+    </div>
+
+    <!-- STEP 1: Open Google Cloud Console -->
+    <div class="step active" id="step-1-box">
+      <div class="step-header">
+        <div class="step-num" id="num-1">1</div>
+        <div class="step-title">Open Google Cloud Console</div>
+      </div>
+      <div class="step-body">
+        <div class="step-desc">
+          We need to create a free Google OAuth 2.0 Client ID. This tells Google that InstaBuild on your computer is allowed to use Google Sign-In.
+        </div>
+        <button class="btn-google" onclick="openGoogleConsole()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/></svg>
+          Open Google Cloud Console
+        </button>
+        &nbsp;&nbsp;
+        <button class="btn-secondary" onclick="nextStep(1)">Already have a project →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Create OAuth Client ID -->
+    <div class="step" id="step-2-box">
+      <div class="step-header">
+        <div class="step-num" id="num-2">2</div>
+        <div class="step-title">Create OAuth 2.0 Client ID</div>
+      </div>
+      <div class="step-body">
+        <div class="step-desc">
+          In Google Cloud Console, do the following:
+        </div>
+        <div class="checklist">
+          <div class="checklist-item">Click <strong style="color:#fff;">APIs &amp; Services → Credentials</strong> in the left sidebar</div>
+          <div class="checklist-item">Click <strong style="color:#fff;">+ CREATE CREDENTIALS → OAuth 2.0 Client IDs</strong></div>
+          <div class="checklist-item">Application type: <strong style="color:#fff;">Web application</strong></div>
+          <div class="checklist-item">Under <strong style="color:#fff;">Authorized JavaScript origins</strong>, click "+ ADD URI" and paste:</div>
+        </div>
+        <div class="code-box" onclick="copyOrigin(this)">
+          <span>http://localhost:3001</span>
+          <span class="copy-hint">click to copy</span>
+        </div>
+        <div class="notice">
+          <strong>⚡ Tip:</strong> If Google asks to configure the OAuth consent screen first, choose <strong>External</strong>, fill in your App name (e.g. "InstaBuild"), your email, then save and go back to create credentials.
+        </div>
+        <button class="btn-primary" onclick="nextStep(2)">Done — I created the Client ID →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Paste Client ID -->
+    <div class="step" id="step-3-box">
+      <div class="step-header">
+        <div class="step-num" id="num-3">3</div>
+        <div class="step-title">Paste your Client ID</div>
+      </div>
+      <div class="step-body">
+        <div class="step-desc">
+          Copy the Client ID from Google Cloud Console. It looks like: <code style="color:#4285F4;font-family:'Fira Code',monospace;">123456789-xxxx.apps.googleusercontent.com</code>
+        </div>
+        <div class="input-row">
+          <input
+            class="client-id-input"
+            id="client-id-input"
+            type="text"
+            placeholder="123456789-xxxx.apps.googleusercontent.com"
+            oninput="validateClientId(this)"
+          />
+        </div>
+        <div class="validation-msg" id="validation-msg"></div>
+        <button class="btn-primary" onclick="saveClientId()" id="save-btn" disabled style="opacity:0.4;cursor:not-allowed;">
+          ✓ Save &amp; Activate Google Sign-In
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentStep = 1;
+
+    function openGoogleConsole() {
+      window.open('https://console.cloud.google.com/apis/credentials', '_blank');
+      setTimeout(() => nextStep(1), 800);
+    }
+
+    function nextStep(from) {
+      const next = from + 1;
+      if (next > 3) return;
+
+      // Mark current as done
+      document.getElementById('step-' + from + '-box').classList.remove('active');
+      document.getElementById('step-' + from + '-box').classList.add('done');
+      document.getElementById('num-' + from).textContent = '✓';
+      document.getElementById('dot-' + from).classList.remove('active');
+      document.getElementById('dot-' + from).classList.add('done');
+
+      // Activate next
+      document.getElementById('step-' + next + '-box').classList.add('active');
+      document.getElementById('dot-' + next).classList.add('active');
+      currentStep = next;
+
+      // Scroll to next step
+      document.getElementById('step-' + next + '-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function copyOrigin(el) {
+      navigator.clipboard.writeText('http://localhost:3001').then(() => {
+        const hint = el.querySelector('.copy-hint');
+        hint.textContent = '✓ copied!';
+        hint.style.color = '#00a86b';
+        setTimeout(() => {
+          hint.textContent = 'click to copy';
+          hint.style.color = '';
+        }, 2000);
+      });
+    }
+
+    function validateClientId(input) {
+      const val = input.value.trim();
+      const msg = document.getElementById('validation-msg');
+      const btn = document.getElementById('save-btn');
+
+      if (!val) {
+        input.className = 'client-id-input';
+        msg.textContent = '';
+        btn.disabled = true;
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'not-allowed';
+        return;
+      }
+
+      if (val.includes('.apps.googleusercontent.com') && val.length > 20) {
+        input.className = 'client-id-input valid';
+        msg.textContent = '✓ Valid Client ID format';
+        msg.className = 'validation-msg ok';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+      } else {
+        input.className = 'client-id-input invalid';
+        msg.textContent = '✗ Must end with .apps.googleusercontent.com';
+        msg.className = 'validation-msg err';
+        btn.disabled = true;
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'not-allowed';
+      }
+    }
+
+    async function saveClientId() {
+      const clientId = document.getElementById('client-id-input').value.trim();
+      if (!clientId.includes('.apps.googleusercontent.com')) return;
+
+      const btn = document.getElementById('save-btn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      try {
+        // Save to server (persists to disk)
+        const r = await fetch('/save-client-id', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clientId })
+        });
+        const data = await r.json();
+
+        if (data.success) {
+          // Mark step 3 done
+          document.getElementById('step-3-box').classList.remove('active');
+          document.getElementById('step-3-box').classList.add('done');
+          document.getElementById('num-3').textContent = '✓';
+          document.getElementById('dot-3').classList.remove('active');
+          document.getElementById('dot-3').classList.add('done');
+
+          // Show success
+          document.getElementById('success-banner').style.display = 'block';
+          document.getElementById('success-banner').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          throw new Error(data.error || 'Save failed');
+        }
+      } catch (e) {
+        btn.textContent = '✗ Error: ' + e.message;
+        btn.style.background = 'rgba(255,77,0,0.3)';
+        btn.disabled = false;
+        setTimeout(() => {
+          btn.textContent = '✓ Save & Activate Google Sign-In';
+          btn.style.background = '#ff4d00';
+        }, 3000);
+      }
+    }
+  </script>
+</body>
+</html>

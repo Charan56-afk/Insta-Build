@@ -1,0 +1,184 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineStream</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f1f5f9;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .glass {
+      backdrop-filter: blur(10px);
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- Central State -->
+<script>
+  const BACKEND_URL = window.location.pathname.startsWith('/deploy/') 
+    ? window.location.pathname.split('/').slice(0, 3).join('/') 
+    : 'http://localhost:3000';
+
+  let state = {
+    user: { name: "John Smith", email: "john.smith@example.com", avatar: "" },
+    activeTab: 'dashboard',
+    movies: [
+      { id: 1, title: "Inception", year: 2010, rating: 8.8, genre: "Sci-Fi", poster: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&h=300" },
+      { id: 2, title: "The Dark Knight", year: 2008, rating: 9.0, genre: "Action", poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=400&h=300" },
+      { id: 3, title: "Interstellar", year: 2014, rating: 8.6, genre: "Adventure", poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=400&h=300" }
+    ],
+    searchQuery: '',
+    selectedGenre: 'All'
+  };
+
+  // Render Functions
+  function renderMovies() {
+    const container = document.getElementById('movies-grid');
+    container.innerHTML = '';
+    const filtered = state.movies.filter(movie => 
+      movie.title.toLowerCase().includes(state.searchQuery.toLowerCase()) &&
+      (state.selectedGenre === 'All' || movie.genre === state.selectedGenre)
+    );
+    
+    filtered.forEach(movie => {
+      const el = document.createElement('div');
+      el.className = 'card-hover bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-all duration-300';
+      el.innerHTML = `
+        <img src="${movie.poster}" alt="${movie.title}" class="w-full h-48 object-cover">
+        <div class="p-4">
+          <h3 class="font-bold text-lg truncate">${movie.title}</h3>
+          <p class="text-sm text-gray-400">${movie.year} • ${movie.genre}</p>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-yellow-400 font-semibold">★ ${movie.rating}</span>
+            <button onclick="addToWatchlist(${movie.id})" class="text-indigo-400 hover:text-indigo-300">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+          </div>
+        </div>
+      `;
+      container.appendChild(el);
+    });
+  }
+
+  function renderDashboard() {
+    document.getElementById('main-content').innerHTML = `
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl font-bold">Welcome back, ${state.user.name}</h1>
+          <button onclick="signOut()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+            <i data-lucide="log-out"></i> Sign Out
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="glass p-6 rounded-xl">
+            <h2 class="text-xl font-semibold mb-2">Watchlist</h2>
+            <p class="text-3xl font-bold text-indigo-400">${state.movies.length}</p>
+          </div>
+          <div class="glass p-6 rounded-xl">
+            <h2 class="text-xl font-semibold mb-2">Favorites</h2>
+            <p class="text-3xl font-bold text-indigo-400">12</p>
+          </div>
+          <div class="glass p-6 rounded-xl">
+            <h2 class="text-xl font-semibold mb-2">History</h2>
+            <p class="text-3xl font-bold text-indigo-400">42</p>
+          </div>
+        </div>
+
+        <div class="mb-6 flex flex-wrap gap-2">
+          <input type="text" placeholder="Search movies..." class="bg-gray-800 rounded-lg px-4 py-2 w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                 oninput="state.searchQuery = this.value; renderMovies()">
+          <select onchange="state.selectedGenre = this.value; renderMovies()" class="bg-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="All">All Genres</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+            <option value="Action">Action</option>
+            <option value="Adventure">Adventure</option>
+          </select>
+        </div>
+
+        <div id="movies-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    `;
+    renderMovies();
+    lucide.createIcons();
+  }
+
+  function renderAuthScreen() {
+    document.getElementById('main-content').innerHTML = `
+      <div class="max-w-md mx-auto my-20 p-8 glass rounded-2xl">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold mb-2">CineStream</h1>
+          <p class="text-gray-400">Your personal movie streaming experience</p>
+        </div>
+        
+        <div class="flex space-x-4 mb-6">
+          <button class="flex-1 bg-gray-800 hover:bg-gray-700 py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-2-2-2 2-2-2-2 2-2-2-2 2H2"/></svg>
+            Google
+          </button>
+          <button onclick="demoLogin()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Demo Login
+          </button>
+        </div>
+        
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-700"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-gray-900 text-gray-400">Or continue with</span>
+          </div>
+        </div>
+        
+        <form id="login-form" class="space-y-4">
+          <input type="email" placeholder="Email address" class="w-full bg-gray-800 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <input type="password" placeholder="Password" class="w-full bg-gray-800 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-3 rounded-lg transition-colors">Sign In</button>
+        </form>
+        
+        <p class="mt-4 text-center text-gray-400">
+          Don't have an account? <a href="#" class="text-indigo-400 hover:underline">Create one</a>
+        </p>
+      </div>
+    `;
+    lucide.createIcons();
+  }
+
+  function signOut() {
+    state.user = null;
+    renderAuthScreen();
+  }
+
+  function demoLogin() {
+    state.user = { name: "John Smith", email: "john.smith@example.com", avatar: "" };
+    renderDashboard();
+  }
+
+  function addToWatchlist(id) {
+    alert(`Added movie ID ${id} to watchlist`);
+  }
+
+  // Initial render
+  if (state.user) {
+    renderDashboard();
+  } else {
+    renderAuthScreen();
+  }
+</script>
+
+<div id="main-content"></div>
+
+
+</body></html>

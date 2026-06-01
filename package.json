@@ -1,0 +1,16 @@
+{
+  "name": "instabuild-runner",
+  "version": "1.0.0",
+  "description": "Companion runner server for InstaBuild",
+  "main": "runner.js",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.3",
+    "socket.io": "^4.8.3",
+    "uuid": "^14.0.0"
+  }
+}

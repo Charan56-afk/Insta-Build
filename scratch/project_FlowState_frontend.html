@@ -1,0 +1,94 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowState | Project Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-white p-6">
+            <h1 class="text-2xl font-bold mb-10">FlowState</h1>
+            <nav>
+                <ul class="space-y-4">
+                    <li id="navDashboard" class="p-2 bg-blue-600 rounded cursor-pointer">Dashboard</li>
+                    <li class="p-2 hover:bg-slate-800 rounded cursor-pointer">Projects</li>
+                    <li class="p-2 hover:bg-slate-800 rounded cursor-pointer">Team</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <header class="flex justify-between items-center mb-8">
+                <h2 id="viewTitle" class="text-3xl font-semibold text-gray-800">Projects</h2>
+                <button id="addTaskBtn" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">Add Task</button>
+            </header>
+
+            <!-- Projects Grid -->
+            <section id="projectSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Projects injected here -->
+            </section>
+
+            <!-- Task Board -->
+            <section id="taskBoard" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Task Cards will be injected here -->
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const BACKEND_URL = window.location.pathname.startsWith('/deploy/') ? window.location.pathname.split('/').slice(0, 3).join('/') : 'http://localhost:3000';
+        let currentProjectId = null;
+
+        async function fetchProjects() {
+            const response = await fetch(`${BACKEND_URL}/api/projects`);
+            const projects = await response.json();
+            const container = document.getElementById('projectSection');
+            container.innerHTML = projects.map(p => `
+                <div onclick="selectProject(${p.id}, '${p.name}')" class="bg-white p-4 rounded-lg shadow hover:shadow-md cursor-pointer border border-transparent hover:border-blue-500 transition">
+                    <img src="${p.image}" class="w-full h-32 object-cover rounded mb-3">
+                    <h3 class="font-bold text-lg">${p.name}</h3>
+                    <p class="text-xs text-gray-500 uppercase">${p.status}</p>
+                </div>
+            `).join('');
+        }
+
+        async function fetchTasks(projectId = null) {
+            const url = projectId ? `${BACKEND_URL}/api/tasks?projectId=${projectId}` : `${BACKEND_URL}/api/tasks`;
+            const response = await fetch(url);
+            const tasks = await response.json();
+            const container = document.getElementById('taskBoard');
+            container.innerHTML = tasks.map(task => `
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="font-bold text-lg mb-2">${task.title}</h3>
+                    <p class="text-gray-600 text-sm mb-4">${task.description || 'No description'}</p>
+                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">${task.status}</span>
+                </div>
+            `).join('');
+        }
+
+        function selectProject(id, name) {
+            currentProjectId = id;
+            document.getElementById('viewTitle').innerText = name;
+            fetchTasks(id);
+        }
+
+        document.getElementById('addTaskBtn').addEventListener('click', async () => {
+            const title = prompt("Enter task title:");
+            if (!title) return;
+
+            await fetch(`${BACKEND_URL}/api/tasks`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, status: 'Todo', projectId: currentProjectId })
+            });
+            fetchTasks(currentProjectId);
+        });
+
+        // Initialize
+        fetchProjects();
+        fetchTasks();
+    </script>
+
+</body></html>
