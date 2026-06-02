@@ -5,8 +5,51 @@ services:
     plan: free
     buildCommand: npm install
     startCommand: node runner.js
-    envVarGroups:
-      - name: instabuild-secrets
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY_1
+        sync: false
+      - key: GEMINI_API_KEY_2
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.0-flash
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: mixtral-8x7b-32768
+      - key: HF_TOKEN
+        sync: false
+      - key: HF_TOKEN_1
+        sync: false
+      - key: HF_TOKEN_2
+        sync: false
+      - key: HF_MODEL
+        value: Qwen/Qwen2.5-Coder-32B-Instruct
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: NVIDIA_API_KEY_1
+        sync: false
+      - key: NVIDIA_API_KEY_2
+        sync: false
+      - key: NVIDIA_MODEL
+        value: deepseek-ai/deepseek-v4-pro
+      - key: NVIDIA_MODEL_2
+        value: deepseek-ai/deepseek-v4-pro
+      - key: OLLAMA_URL
+        value: http://127.0.0.1:11434/api/generate
+      - key: OLLAMA_MODEL
+        value: qwen2.5-coder:7b
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: RUNNER_PORT
+        value: "3001"
+      - key: AI_ROUTER_PORT
+        value: "3002"
 
   - type: web
     name: instabuild-ai-router
@@ -14,11 +57,6 @@ services:
     plan: free
     buildCommand: npm install
     startCommand: node ai_router.js
-    envVarGroups:
-      - name: instabuild-secrets
-
-envVarGroups:
-  - name: instabuild-secrets
     envVars:
       - key: GEMINI_API_KEY_1
         sync: false
@@ -51,6 +89,6 @@ envVarGroups:
       - key: MONGO_URI
         sync: false
       - key: RUNNER_PORT
-        value: 3001
+        value: "3001"
       - key: AI_ROUTER_PORT
-        value: 3002
+        value: "3002"
