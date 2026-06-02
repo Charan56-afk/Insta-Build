@@ -1891,6 +1891,7 @@
                                 <div style="display:flex;gap:8px;align-items:center;">
                                     <button class="copy-btn" onclick="copyOutput()">Copy</button>
                                     <button class="copy-btn" onclick="saveProject()">Save project</button>
+                                    <button class="copy-btn" style="background:#8b5cf6;color:white;border-color:#8b5cf6;" onclick="openInIde()">💻 IDE</button>
                                 </div>
                             </div>
 
@@ -1928,6 +1929,9 @@
                                             <button class="copy-btn"
                                                 style="background: #10b981; color: white; border-color: #10b981;"
                                                 id="deploy-btn" onclick="openDeployModal()">🚀 Deploy</button>
+                                            <button class="copy-btn"
+                                                style="background: #8b5cf6; color: white; border-color: #8b5cf6;"
+                                                onclick="openInIde()">💻 IDE</button>
                                         </div>
                                     </div>
                                     <!-- Visual Edit Properties Panel -->
@@ -6365,19 +6369,62 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
             grid.innerHTML = projects.map(p => {
                 const pid = p._id || p.id;
                 return `
-    <div class="proj-card" onclick='loadSavedProject("${pid}")'>
-      <div class="proj-card-top">
+    <div class="proj-card">
+      <div class="proj-card-top" onclick='loadSavedProject("${pid}")'>
         <div class="proj-name">${esc(p.name)}</div>
         <div class="proj-type">app</div>
       </div>
-      <div class="proj-desc">${esc(p.idea)}</div>
+      <div class="proj-desc" onclick='loadSavedProject("${pid}")'>${esc(p.idea)}</div>
       <div class="proj-meta">
         <span>${p.timestamp}</span>
-        <span style="color:var(--accent);">view →</span>
+        <span style="display:flex;gap:8px;">
+          <span style="color:var(--accent);cursor:pointer;" onclick='loadSavedProject("${pid}")'>view →</span>
+          <span style="color:#8b5cf6;cursor:pointer;font-weight:600;" onclick='event.stopPropagation();openProjectInIde("${pid}")'>💻 IDE</span>
+        </span>
       </div>
     </div>
   `;
             }).join('');
+        }
+
+        async function openInIde() {
+            const data = currentBuildData;
+            if (!data || (!data.frontend && !data.backend)) {
+                alert('No project code to open in IDE. Build a project first.');
+                return;
+            }
+            const projectSlug = (data.name || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString(36);
+            try {
+                if (data.frontend) {
+                    await fetch(RUNNER_ORIGIN + '/api/ide/files/' + projectSlug, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ path: 'index.html', content: data.frontend })
+                    });
+                }
+                if (data.backend) {
+                    await fetch(RUNNER_ORIGIN + '/api/ide/files/' + projectSlug, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ path: 'server.js', content: data.backend })
+                    });
+                }
+            } catch (e) {
+                console.error('Failed to save project to IDE:', e);
+            }
+            window.open('/ide?project=' + projectSlug, '_blank');
+        }
+
+        async function openProjectInIde(id) {
+            const proj = projects.find(p => p.id === id || p._id === id);
+            if (!proj) return;
+            currentBuildData = {
+                id: proj._id || proj.id,
+                name: proj.name,
+                frontend: proj.frontend || proj.code || '',
+                backend: proj.backend || ''
+            };
+            await openInIde();
         }
 
         function loadSavedProject(id) {

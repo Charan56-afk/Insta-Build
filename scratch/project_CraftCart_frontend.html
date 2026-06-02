@@ -1,0 +1,425 @@
+
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handmade Crafts Catalog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    }
+    .cart-panel {
+      transition: transform 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+  </style>
+<script>
+    window.onerror = function(message, source, lineno, colno, error) {
+        console.error("Iframe Error:", message, "at", source, ":", lineno);
+        window.parent.postMessage({
+            type: 'iframe-error',
+            message: message,
+            source: source,
+            lineno: lineno,
+            colno: colno,
+            stack: error?.stack
+        }, '*');
+    };
+</script><style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.inset-y-0{top:0px;bottom:0px}.right-0{right:0px}.top-0{top:0px}.z-50{z-index:50}.my-4{margin-top:1rem;margin-bottom:1rem}.mb-1{margin-bottom:0.25rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-4{margin-top:1rem}.mt-2{margin-top:0.5rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-5{height:1.25rem}.h-8{height:2rem}.h-\[calc\(100\%-120px\)\]{height:calc(100% - 120px)}.h-screen{height:100vh}.h-48{height:12rem}.min-h-screen{min-height:100vh}.w-5{width:1.25rem}.w-64{width:16rem}.w-8{width:2rem}.w-full{width:100%}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.translate-x-full{--tw-translate-x:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-white\/20{border-color:rgb(255 255 255 / 0.2)}.bg-black\/50{background-color:rgb(0 0 0 / 0.5)}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/70{background-color:rgb(255 255 255 / 0.7)}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.object-cover{object-fit:cover}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-200:hover{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-300:hover{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.hover\:bg-green-600:hover{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.hover\:bg-green-700:hover{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:text-gray-700:hover{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.hover\:text-gray-900:hover{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-indigo-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(99 102 241 / var(--tw-ring-opacity, 1))}@media (min-width: 640px){.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 768px){.md\:block{display:block}.md\:w-96{width:24rem}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}</style></head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Auth Card -->
+  <div id="auth-container" class="flex justify-center items-center h-screen hidden">
+    <div class="bg-white/80 backdrop-blur-md p-8 rounded-xl shadow-xl w-full max-w-md border border-white/20">
+      <h2 class="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
+      <div class="space-y-4">
+        <input type="email" placeholder="Email" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <input type="password" placeholder="Password" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <button class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">Sign In</button>
+        <button class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300 transition">Create Account</button>
+        <div class="relative my-4">
+          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-300"></div></div>
+          <div class="relative flex justify-center text-sm"><span class="px-2 bg-white text-gray-500">Or continue with</span></div>
+        </div>
+        <div class="flex space-x-4 justify-center">
+          <button class="p-2 rounded-full bg-gray-100 hover:bg-gray-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.478 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.761-.084-1.473-.237-2.175H12.24z"></path></svg></button>
+          <button class="p-2 rounded-full bg-gray-100 hover:bg-gray-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z"></path></svg></button>
+        </div>
+        <button id="quick-demo-login" class="mt-4 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">⚡ Quick Demo Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div id="dashboard-container" class="flex flex-col min-h-screen">
+    <!-- Top Header -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-white/20 p-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold">Handmade Crafts</h1>
+      <div class="flex items-center space-x-4">
+        <button id="cart-toggle" class="relative p-2 rounded-full hover:bg-gray-100">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 8 12 12 14 14"></polyline></svg>
+          <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+        </button>
+        <div class="flex items-center space-x-2 cursor-pointer">
+          <div class="bg-gray-200 border-2 border-dashed rounded-xl w-8 h-8"></div>
+          <span id="user-name">John Smith</span>
+        </div>
+        <button id="sign-out" class="text-sm text-gray-600 hover:text-gray-900">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex">
+      <!-- Sidebar Filters -->
+      <aside class="w-64 p-4 bg-white/70 backdrop-blur-sm border-r border-white/20 hidden md:block">
+        <h2 class="font-semibold mb-4">Filters</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Category</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option>All Categories</option>
+              <option>Jewelry</option>
+              <option>Ceramics</option>
+              <option>Textiles</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Price Range</label>
+            <div class="flex items-center space-x-2">
+              <input type="number" placeholder="Min" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" placeholder="Max" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Sort By</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option>Most Recent</option>
+              <option>Price: Low to High</option>
+              <option>Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Product Grid -->
+      <section class="flex-1 p-4 overflow-auto" style="display: block; flex-flow: row; justify-content: normal; align-items: flex-start;">
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&amp;fit=crop&amp;w=400&amp;h=300" alt="Handwoven Basket" class="w-full h-48 object-cover" style="display: block; flex-flow: row-reverse; justify-content: normal; align-items: normal;">
+          <div class="p-4">
+            <h3 class="font-semibold">Handwoven Basket</h3>
+            <p class="text-gray-600 text-sm">Textiles</p>
+            <div class="flex justify-between items-center mt-2">
+              <span class="font-bold">$45.99</span>
+              <button data-id="1" class="add-to-cart bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 text-sm">Add to Cart</button>
+            </div>
+          </div>
+        </div><div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&amp;fit=crop&amp;w=400&amp;h=300" alt="Ceramic Mug" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold">Ceramic Mug</h3>
+            <p class="text-gray-600 text-sm">Ceramics</p>
+            <div class="flex justify-between items-center mt-2">
+              <span class="font-bold">$22.50</span>
+              <button data-id="2" class="add-to-cart bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 text-sm">Add to Cart</button>
+            </div>
+          </div>
+        </div><div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&amp;fit=crop&amp;w=400&amp;h=300" alt="Silver Pendant" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold">Silver Pendant</h3>
+            <p class="text-gray-600 text-sm">Jewelry</p>
+            <div class="flex justify-between items-center mt-2">
+              <span class="font-bold">$89.99</span>
+              <button data-id="3" class="add-to-cart bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 text-sm">Add to Cart</button>
+            </div>
+          </div>
+        </div><div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&amp;fit=crop&amp;w=400&amp;h=300" alt="Macrame Wall Hanging" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold">Macrame Wall Hanging</h3>
+            <p class="text-gray-600 text-sm">Textiles</p>
+            <div class="flex justify-between items-center mt-2">
+              <span class="font-bold">$65.00</span>
+              <button data-id="4" class="add-to-cart bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 text-sm">Add to Cart</button>
+            </div>
+          </div>
+        </div><div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&amp;fit=crop&amp;w=400&amp;h=300" alt="Clay Pot Set" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold">Clay Pot Set</h3>
+            <p class="text-gray-600 text-sm">Ceramics</p>
+            <div class="flex justify-between items-center mt-2">
+              <span class="font-bold">$35.00</span>
+              <button data-id="5" class="add-to-cart bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 text-sm">Add to Cart</button>
+            </div>
+          </div>
+        </div><div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&amp;fit=crop&amp;w=400&amp;h=300" alt="Gold Ring" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold">Gold Ring</h3>
+            <p class="text-gray-600 text-sm">Jewelry</p>
+            <div class="flex justify-between items-center mt-2">
+              <span class="font-bold">$120.00</span>
+              <button data-id="6" class="add-to-cart bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 text-sm">Add to Cart</button>
+            </div>
+          </div>
+        </div></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Cart Panel -->
+  <div id="cart-panel" class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-xl z-50 cart-panel transform translate-x-full">
+    <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+      <h2 class="text-xl font-bold">Your Cart</h2>
+      <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div id="cart-items" class="p-4 space-y-4 overflow-y-auto h-[calc(100%-120px)]"></div>
+    <div class="p-4 border-t border-gray-200">
+      <div class="flex justify-between text-lg font-bold mb-4">
+        <span>Total:</span>
+        <span id="cart-total">$0.00</span>
+      </div>
+      <button id="checkout-btn" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md">
+      <h2 class="text-xl font-bold mb-4">Checkout</h2>
+      <form id="checkout-form" class="space-y-4">
+        <input type="text" placeholder="Full Name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <input type="email" placeholder="Email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <input type="text" placeholder="Address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <div class="grid grid-cols-2 gap-4">
+          <input type="text" placeholder="City" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <input type="text" placeholder="ZIP Code" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">Place Order</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Backend URL detection
+    const BACKEND_URL = window.location.pathname.startsWith('/deploy/') 
+      ? window.location.pathname.split('/').slice(0, 3).join('/') 
+      : 'http://localhost:3001/api/live-backend';
+
+    // Central State Management
+    let state = {
+      user: { name: "John Smith", email: "john.smith@example.com", avatar: "" },
+      products: [],
+      cart: [],
+      filters: {}
+    };
+
+    // DOM Elements
+    const authContainer = document.getElementById('auth-container');
+    const dashboardContainer = document.getElementById('dashboard-container');
+    const productsGrid = document.getElementById('products-grid');
+    const cartPanel = document.getElementById('cart-panel');
+    const cartItems = document.getElementById('cart-items');
+    const cartCount = document.getElementById('cart-count');
+    const cartTotal = document.getElementById('cart-total');
+    const cartToggle = document.getElementById('cart-toggle');
+    const closeCart = document.getElementById('close-cart');
+    const signOut = document.getElementById('sign-out');
+    const quickDemoLogin = document.getElementById('quick-demo-login');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const checkoutModal = document.getElementById('checkout-modal');
+    const checkoutForm = document.getElementById('checkout-form');
+    const userName = document.getElementById('user-name');
+
+    // Mock Data
+    const mockProducts = [
+      { id: 1, name: "Handwoven Basket", price: 45.99, category: "Textiles", image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&h=300" },
+      { id: 2, name: "Ceramic Mug", price: 22.50, category: "Ceramics", image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&h=300" },
+      { id: 3, name: "Silver Pendant", price: 89.99, category: "Jewelry", image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&h=300" },
+      { id: 4, name: "Macrame Wall Hanging", price: 65.00, category: "Textiles", image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&h=300" },
+      { id: 5, name: "Clay Pot Set", price: 35.00, category: "Ceramics", image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&h=300" },
+      { id: 6, name: "Gold Ring", price: 120.00, category: "Jewelry", image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&h=300" }
+    ];
+
+    // Initialize App
+    window.onload = () => {
+      lucide.createIcons();
+      state.products = mockProducts;
+      renderDashboard();
+      setupEventListeners();
+    };
+
+    // Render Functions
+    function renderDashboard() {
+      if (!state.user) {
+        authContainer.classList.remove('hidden');
+        dashboardContainer.classList.add('hidden');
+        return;
+      }
+
+      authContainer.classList.add('hidden');
+      dashboardContainer.classList.remove('hidden');
+      userName.textContent = state.user.name;
+
+      renderProducts();
+      updateCartUI();
+    }
+
+    function renderProducts() {
+      productsGrid.innerHTML = '';
+      state.products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300';
+        productCard.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold">${product.name}</h3>
+            <p class="text-gray-600 text-sm">${product.category}</p>
+            <div class="flex justify-between items-center mt-2">
+              <span class="font-bold">$${product.price.toFixed(2)}</span>
+              <button data-id="${product.id}" class="add-to-cart bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 text-sm">Add to Cart</button>
+            </div>
+          </div>
+        `;
+        productsGrid.appendChild(productCard);
+      });
+      document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          addToCart(id);
+        });
+      });
+    }
+
+    function updateCartUI() {
+      cartItems.innerHTML = '';
+      let total = 0;
+
+      state.cart.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'flex items-center justify-between border-b pb-2';
+        itemElement.innerHTML = `
+          <div class="flex items-center">
+            <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded mr-3">
+            <div>
+              <h4 class="font-medium">${item.name}</h4>
+              <p class="text-gray-600 text-sm">$${item.price.toFixed(2)}</p>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <span class="mr-2">${item.quantity}</span>
+            <button data-id="${item.id}" class="remove-item text-red-500 hover:text-red-700">×</button>
+          </div>
+        `;
+        cartItems.appendChild(itemElement);
+        total += item.price * item.quantity;
+      });
+
+      cartCount.textContent = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartTotal.textContent = `$${total.toFixed(2)}`;
+      
+      document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          removeFromCart(id);
+        });
+      });
+    }
+
+    // Cart Actions
+    function addToCart(productId) {
+      const product = state.products.find(p => p.id === productId);
+      if (!product) return;
+
+      const existingItem = state.cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        state.cart.push({ ...product, quantity: 1 });
+      }
+      updateCartUI();
+    }
+
+    function removeFromCart(productId) {
+      state.cart = state.cart.filter(item => item.id !== productId);
+      updateCartUI();
+    }
+
+    // Event Listeners
+    function setupEventListeners() {
+      cartToggle.addEventListener('click', () => {
+        cartPanel.classList.remove('translate-x-full');
+      });
+
+      closeCart.addEventListener('click', () => {
+        cartPanel.classList.add('translate-x-full');
+      });
+
+      signOut.addEventListener('click', () => {
+        state.user = null;
+        renderDashboard();
+      });
+
+      quickDemoLogin.addEventListener('click', () => {
+        state.user = { name: "John Smith", email: "john.smith@example.com", avatar: "" };
+        renderDashboard();
+      });
+
+      checkoutBtn.addEventListener('click', () => {
+        checkoutModal.classList.remove('hidden');
+      });
+
+      checkoutForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(checkoutForm);
+        const orderData = {
+          customer: {
+            name: formData.get('Full Name'),
+            email: formData.get('Email'),
+            address: formData.get('Address'),
+            city: formData.get('City'),
+            zipCode: formData.get('ZIP Code')
+          },
+          items: state.cart.map(item => ({
+            productId: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity
+          })),
+          total: parseFloat(cartTotal.textContent.replace('$', ''))
+        };
+
+        try {
+          const res = await fetch(`${BACKEND_URL}/api/checkout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+          });
+
+          if (!res.ok) throw new Error('Failed to place order');
+          
+          alert('Order placed successfully!');
+          state.cart = [];
+          updateCartUI();
+          checkoutModal.classList.add('hidden');
+        } catch (err) {
+          console.error(err.message);
+          alert("Backend error - order placed in demo mode");
+          state.cart = [];
+          updateCartUI();
+          checkoutModal.classList.add('hidden');
+        }
+      });
+    }
+  </script>
+
+</body></html>
