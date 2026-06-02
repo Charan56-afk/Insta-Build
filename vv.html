@@ -6419,64 +6419,34 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
         async function writeIframe(html) {
             const iframe = document.getElementById('preview-iframe');
             if (!iframe) return;
+            if (!html || html.length < 10) {
+                iframe.removeAttribute('src');
+                iframe.srcdoc = '<html><body style="font-family:sans-serif;color:#7a7670;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#ede9e0;"><div style="text-align:center;"><h3>No preview content</h3></div></body></html>';
+                return;
+            }
             let modifiedHtml = html;
             const errorScript = '\x3cscript\x3e' + `
-    // Error tracking
     window.onerror = function(message, source, lineno, colno, error) {
         console.error("Iframe Error:", message, "at", source, ":", lineno);
-        window.parent.postMessage({
-            type: 'iframe-error',
-            message: message,
-            source: source,
-            lineno: lineno,
-            colno: colno,
-            stack: error?.stack
-        }, '*');
+        window.parent.postMessage({ type: 'iframe-error', message: message, source: source, lineno: lineno, colno: colno, stack: error?.stack }, '*');
     };
-
-    // Polyfill lucide if CDN fails to prevent ReferenceError crash
-    try {
-        if (typeof window.lucide === 'undefined') {
-            window.lucide = {
-                createIcons: function() { console.log('Lucide CDN offline - skipped icon render'); }
-            };
-        }
-    } catch (e) {}
-
-    // Lifecycle polyfill to ensure load / DOMContentLoaded events fire even if attached late
+    try { if (typeof window.lucide === 'undefined') { window.lucide = { createIcons: function() { console.log('Lucide CDN offline - skipped icon render'); } }; } } catch (e) {}
     try {
         const originalAddEventListener = window.addEventListener;
         window.addEventListener = function(type, listener, options) {
-            if ((type === 'load' || type === 'DOMContentLoaded') && (document.readyState === 'complete' || document.readyState === 'interactive')) {
-                setTimeout(listener, 0);
-            } else {
-                originalAddEventListener.call(window, type, listener, options);
-            }
+            if ((type === 'load' || type === 'DOMContentLoaded') && (document.readyState === 'complete' || document.readyState === 'interactive')) { setTimeout(listener, 0); }
+            else { originalAddEventListener.call(window, type, listener, options); }
         };
-        
         const originalDocAddEventListener = document.addEventListener;
         document.addEventListener = function(type, listener, options) {
-            if ((type === 'DOMContentLoaded' || type === 'load') && (document.readyState === 'complete' || document.readyState === 'interactive')) {
-                setTimeout(listener, 0);
-            } else {
-                originalDocAddEventListener.call(document, type, listener, options);
-            }
+            if ((type === 'DOMContentLoaded' || type === 'load') && (document.readyState === 'complete' || document.readyState === 'interactive')) { setTimeout(listener, 0); }
+            else { originalDocAddEventListener.call(document, type, listener, options); }
         };
-
         let onloadHandler = null;
         Object.defineProperty(window, 'onload', {
-            get() { return onloadHandler; },
-            set(handler) {
-                onloadHandler = handler;
-                if (handler && (document.readyState === 'complete' || document.readyState === 'interactive')) {
-                    setTimeout(handler, 0);
-                }
-            },
-            configurable: true
+            get() { return onloadHandler; }, set(handler) { onloadHandler = handler; if (handler && (document.readyState === 'complete' || document.readyState === 'interactive')) { setTimeout(handler, 0); } }, configurable: true
         });
-    } catch (e) {
-        console.warn('Lifecycle polyfill failed to initialize:', e);
-    }
+    } catch (e) { console.warn('Lifecycle polyfill failed:', e); }
 ` + '\x3c/script\x3e';
             if (modifiedHtml.includes('</head>')) {
                 modifiedHtml = modifiedHtml.replace('</head>', errorScript + '</head>');
@@ -6484,30 +6454,43 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
                 modifiedHtml = errorScript + modifiedHtml;
             }
 
-            if (window.location.protocol !== 'file:') {
-                try {
-                    const res = await fetch(RUNNER_ORIGIN + '/api/preview', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ html: modifiedHtml })
-                    });
-                    if (res.ok) {
-                        iframe.removeAttribute('srcdoc');
-                        iframe.src = (RUNNER_ORIGIN || window.location.origin) + '/preview?t=' + Date.now();
-                        return;
-                    }
-                } catch (e) {
-                    console.warn('Backend preview failed, falling back to srcdoc:', e);
-                }
+            // Use blob URL for reliable rendering (works across all browsers, no size limits)
+            try {
+                const blob = new Blob([modifiedHtml], { type: 'text/html' });
+                const blobUrl = URL.createObjectURL(blob);
+                iframe.removeAttribute('srcdoc');
+                iframe.src = blobUrl;
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+                return;
+            } catch (e) {
+                console.warn('Blob URL failed, trying srcdoc:', e);
             }
 
+            // Fallback: try backend preview
+            try {
+                const res = await fetch(RUNNER_ORIGIN + '/api/preview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ html: modifiedHtml }),
+                    signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined
+                });
+                if (res.ok) {
+                    iframe.removeAttribute('srcdoc');
+                    iframe.src = (RUNNER_ORIGIN || window.location.origin) + '/preview?t=' + Date.now();
+                    return;
+                }
+            } catch (e) {
+                console.warn('Backend preview failed:', e);
+            }
+
+            // Final fallback: srcdoc
             iframe.removeAttribute('src');
             iframe.srcdoc = modifiedHtml;
         }
 
         function updatePreview() {
             const frontend = currentBuildData.frontend;
-            if (!frontend || frontend.startsWith('//') || frontend === 'Generating...' || frontend.length < 50) {
+            if (!frontend || frontend === 'Generating...' || frontend.length < 20) {
                 writeIframe('<html><body style="font-family:sans-serif;color:#7a7670;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#ede9e0;"><div style="text-align:center;"><h3>Waiting for frontend generation...</h3><p style="font-size:13px;color:#7a7670;">Once step 1 completes, the live preview will load here.</p></div></body></html>');
                 return;
             }
@@ -6524,10 +6507,10 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
 
         function refreshPreview() {
             const frontend = currentBuildData.frontend;
-            if (frontend) {
+            if (frontend && frontend.length > 20) {
                 updatePreview();
             } else {
-                writeIframe('<html><body><h3>No preview</h3></body></html>');
+                writeIframe('<html><body style="font-family:sans-serif;color:#7a7670;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#ede9e0;"><div style="text-align:center;"><h3>No preview</h3><p style="font-size:13px;color:#7a7670;">Build an app first or select a saved project.</p></div></body></html>');
             }
         }
 

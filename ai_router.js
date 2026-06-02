@@ -32,6 +32,17 @@ function getHfKey() {
   return key;
 }
 
+// ===== NVIDIA KEY ROTATION =====
+let nvidiaKeyIndex = 0;
+const nvidiaKeys = [process.env.NVIDIA_API_KEY_1, process.env.NVIDIA_API_KEY_2].filter(Boolean);
+
+function getNvidiaKey() {
+  if (nvidiaKeys.length === 0) return '';
+  const key = nvidiaKeys[nvidiaKeyIndex % nvidiaKeys.length];
+  nvidiaKeyIndex++;
+  return key;
+}
+
 // ===== PROVIDER CONFIG =====
 const PROVIDERS = [
   {
@@ -49,8 +60,23 @@ const PROVIDERS = [
     isError: (res) => !res.ok
   },
   {
+    name: 'nvidia',
+    label: 'Cloud NVIDIA (Secondary)',
+    model: process.env.NVIDIA_MODEL || 'deepseek-ai/deepseek-v4-pro',
+    buildUrl: () => 'https://integrate.api.nvidia.com/v1/chat/completions',
+    buildHeaders: () => ({ 'Authorization': `Bearer ${getNvidiaKey()}`, 'Content-Type': 'application/json' }),
+    buildBody: (prompt) => ({ model: process.env.NVIDIA_MODEL || 'deepseek-ai/deepseek-v4-pro', messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096 }),
+    parseResponse: async (res) => {
+      const data = await res.json();
+      if (data.choices && data.choices[0]?.message?.content) return data.choices[0].message.content;
+      throw new Error(data.error?.message || data.error || 'NVIDIA returned an empty response');
+    },
+    isRateLimit: (res) => res.status === 429,
+    isError: (res) => !res.ok
+  },
+  {
     name: 'groq',
-    label: 'Cloud Groq (Secondary)',
+    label: 'Cloud Groq (Tertiary)',
     model: process.env.GROQ_MODEL || 'mixtral-8x7b-32768',
     buildUrl: () => 'https://api.groq.com/openai/v1/chat/completions',
     buildHeaders: () => ({ 'Authorization': `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' }),
@@ -134,6 +160,7 @@ app.post('/api/chat', async (req, res) => {
   for (const provider of PROVIDERS) {
     let maxAttempts = 1;
     if (provider.name === 'gemini') maxAttempts = Math.max(1, geminiKeys.length);
+    else if (provider.name === 'nvidia') maxAttempts = Math.max(1, nvidiaKeys.length);
     else if (provider.name === 'huggingface') maxAttempts = Math.max(1, hfKeys.length);
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -183,6 +210,7 @@ app.post('/api/chat/stream', async (req, res) => {
   for (const provider of providersToTry) {
     let maxAttempts = 1;
     if (provider.name === 'gemini') maxAttempts = Math.max(1, geminiKeys.length);
+    else if (provider.name === 'nvidia') maxAttempts = Math.max(1, nvidiaKeys.length);
     else if (provider.name === 'huggingface') maxAttempts = Math.max(1, hfKeys.length);
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -264,6 +292,7 @@ app.get('/api/status', (req, res) => {
     model: p.model,
     configured: p.name === 'ollama' ? true : !!(
       p.name === 'gemini' ? (process.env.GEMINI_API_KEY_1 || process.env.GEMINI_API_KEY_2) :
+      p.name === 'nvidia' ? (process.env.NVIDIA_API_KEY_1 || process.env.NVIDIA_API_KEY_2) :
       p.name === 'huggingface' ? (process.env.HF_TOKEN_1 || process.env.HF_TOKEN_2) :
       process.env.GROQ_API_KEY
     )

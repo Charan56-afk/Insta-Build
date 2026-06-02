@@ -1004,6 +1004,16 @@ const AI_PROVIDERS = [
     isOverloaded: (status) => status === 429 || status === 403
   },
   {
+    name: 'nvidia', label: 'NVIDIA',
+    buildUrl: () => 'https://integrate.api.nvidia.com/v1/chat/completions',
+    buildHeaders: () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.NVIDIA_API_KEY || ''}` }),
+    buildBody: (prompt, opts) => ({ model: process.env.NVIDIA_MODEL || 'deepseek-ai/deepseek-v4-pro', messages: [{ role: 'user', content: prompt }], max_tokens: opts?.maxTokens || 16384, temperature: opts?.temperature || 1, top_p: 0.95, stream: true, extra_body: { chat_template_kwargs: { thinking: false } } }),
+    parseStream: (line) => {
+      try { const parsed = JSON.parse(line); return parsed.choices?.[0]?.delta?.content || ''; } catch (e) { return ''; }
+    },
+    isOverloaded: (status) => status === 429 || status === 402
+  },
+  {
     name: 'ollama', label: 'Local Ollama',
     buildUrl: () => process.env.OLLAMA_URL || 'http://127.0.0.1:11434/api/generate',
     buildBody: (prompt, opts) => ({ model: process.env.OLLAMA_MODEL || 'codellama', prompt, stream: true, options: { num_predict: opts?.maxTokens || 8192 } }),
@@ -1038,6 +1048,7 @@ app.post('/api/ai/stream', async (req, res) => {
     if (provider.name === 'groq' && !process.env.GROQ_API_KEY) continue;
     if (provider.name === 'gemini' && !process.env.GEMINI_API_KEY && geminiKeys.length === 0) continue;
     if (provider.name === 'huggingface' && !process.env.HF_TOKEN && !process.env.HF_TOKEN_1) continue;
+    if (provider.name === 'nvidia' && !process.env.NVIDIA_API_KEY) continue;
 
     const maxAttempts = provider.name === 'gemini' ? Math.max(1, geminiKeys.length) : 1;
 
@@ -1050,7 +1061,7 @@ app.post('/api/ai/stream', async (req, res) => {
         const body = provider.buildBody(prompt, { maxTokens, temperature });
 
         const controller = new AbortController();
-        const timeoutVal = provider.name === 'ollama' ? 300000 : 60000;
+        const timeoutVal = provider.name === 'ollama' ? 300000 : 180000;
         const timeout = setTimeout(() => controller.abort(), timeoutVal);
 
         let response = await fetch(url, {
@@ -1174,6 +1185,7 @@ app.post('/api/ai/generate', async (req, res) => {
       if (provider.name === 'groq' && !process.env.GROQ_API_KEY) continue;
       if (provider.name === 'gemini' && !process.env.GEMINI_API_KEY && geminiKeys.length === 0) continue;
       if (provider.name === 'huggingface' && !process.env.HF_TOKEN && !process.env.HF_TOKEN_1) continue;
+      if (provider.name === 'nvidia' && !process.env.NVIDIA_API_KEY) continue;
 
       try {
         const url = provider.buildUrl(model);
@@ -1181,7 +1193,7 @@ app.post('/api/ai/generate', async (req, res) => {
         const body = provider.buildBody(prompt, { maxTokens, temperature: 0.5 });
 
         const controller = new AbortController();
-        const timeoutVal = provider.name === 'ollama' ? 300000 : 30000;
+        const timeoutVal = provider.name === 'ollama' ? 300000 : 180000;
         const t = setTimeout(() => controller.abort(), timeoutVal);
 
         let response = await fetch(url, {
@@ -1267,6 +1279,7 @@ app.get('/api/ai/status', (req, res) => {
         p.name === 'gemini' ? (process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_1) :
         p.name === 'anthropic' ? process.env.ANTHROPIC_API_KEY :
         p.name === 'huggingface' ? (process.env.HF_TOKEN || process.env.HF_TOKEN_1) :
+        p.name === 'nvidia' ? process.env.NVIDIA_API_KEY :
         false
       )
     }))
