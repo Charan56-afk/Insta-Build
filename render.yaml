@@ -1,8 +1,7 @@
 services:
   - type: web
     name: instabuild-runner
-    env: node
-    plan: free
+    runtime: node
     buildCommand: "npm install"
     startCommand: "node runner.js"
     envVars:
@@ -49,8 +48,7 @@ services:
 
   - type: web
     name: instabuild-ai-router
-    env: node
-    plan: free
+    runtime: node
     buildCommand: "npm install"
     startCommand: "node ai_router.js"
     envVars:
