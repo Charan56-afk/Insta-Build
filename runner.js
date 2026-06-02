@@ -977,7 +977,7 @@ const AI_PROVIDERS = [
     name: 'groq', label: 'Groq',
     buildUrl: () => 'https://api.groq.com/openai/v1/chat/completions',
     buildHeaders: () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.GROQ_API_KEY || ''}` }),
-    buildBody: (prompt, opts) => ({ model: process.env.GROQ_MODEL || 'mixtral-8x7b-32768', messages: [{ role: 'user', content: prompt }], max_tokens: opts?.maxTokens || 8192, stream: true }),
+    buildBody: (prompt, opts) => ({ model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], max_tokens: opts?.maxTokens || 8192, stream: true }),
     parseStream: (line) => {
       try { const parsed = JSON.parse(line); return parsed.choices?.[0]?.delta?.content || ''; } catch (e) { return ''; }
     },

@@ -77,10 +77,10 @@ const PROVIDERS = [
   {
     name: 'groq',
     label: 'Cloud Groq (Tertiary)',
-    model: process.env.GROQ_MODEL || 'mixtral-8x7b-32768',
+    model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
     buildUrl: () => 'https://api.groq.com/openai/v1/chat/completions',
     buildHeaders: () => ({ 'Authorization': `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' }),
-    buildBody: (prompt) => ({ model: process.env.GROQ_MODEL || 'mixtral-8x7b-32768', messages: [{ role: 'user', content: prompt }], temperature: 0.7 }),
+    buildBody: (prompt) => ({ model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], temperature: 0.7 }),
     parseResponse: async (res) => {
       const data = await res.json();
       if (data.choices && data.choices[0]?.message?.content) return data.choices[0].message.content;
