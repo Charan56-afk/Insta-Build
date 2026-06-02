@@ -1006,7 +1006,7 @@ const AI_PROVIDERS = [
   {
     name: 'nvidia', label: 'NVIDIA',
     buildUrl: () => 'https://integrate.api.nvidia.com/v1/chat/completions',
-    buildHeaders: () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.NVIDIA_API_KEY || ''}` }),
+    buildHeaders: () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.NVIDIA_API_KEY || process.env.NVIDIA_API_KEY_1 || ''}` }),
     buildBody: (prompt, opts) => ({ model: process.env.NVIDIA_MODEL || 'deepseek-ai/deepseek-v4-pro', messages: [{ role: 'user', content: prompt }], max_tokens: opts?.maxTokens || 16384, temperature: opts?.temperature || 1, top_p: 0.95, stream: true, extra_body: { chat_template_kwargs: { thinking: false } } }),
     parseStream: (line) => {
       try { const parsed = JSON.parse(line); return parsed.choices?.[0]?.delta?.content || ''; } catch (e) { return ''; }
@@ -1048,7 +1048,7 @@ app.post('/api/ai/stream', async (req, res) => {
     if (provider.name === 'groq' && !process.env.GROQ_API_KEY) continue;
     if (provider.name === 'gemini' && !process.env.GEMINI_API_KEY && geminiKeys.length === 0) continue;
     if (provider.name === 'huggingface' && !process.env.HF_TOKEN && !process.env.HF_TOKEN_1) continue;
-    if (provider.name === 'nvidia' && !process.env.NVIDIA_API_KEY) continue;
+    if (provider.name === 'nvidia' && !process.env.NVIDIA_API_KEY && !process.env.NVIDIA_API_KEY_1) continue;
 
     const maxAttempts = provider.name === 'gemini' ? Math.max(1, geminiKeys.length) : 1;
 
@@ -1185,7 +1185,7 @@ app.post('/api/ai/generate', async (req, res) => {
       if (provider.name === 'groq' && !process.env.GROQ_API_KEY) continue;
       if (provider.name === 'gemini' && !process.env.GEMINI_API_KEY && geminiKeys.length === 0) continue;
       if (provider.name === 'huggingface' && !process.env.HF_TOKEN && !process.env.HF_TOKEN_1) continue;
-      if (provider.name === 'nvidia' && !process.env.NVIDIA_API_KEY) continue;
+      if (provider.name === 'nvidia' && !process.env.NVIDIA_API_KEY && !process.env.NVIDIA_API_KEY_1) continue;
 
       try {
         const url = provider.buildUrl(model);
@@ -1277,9 +1277,10 @@ app.get('/api/ai/status', (req, res) => {
       label: p.label,
       configured: p.name === 'ollama' ? true : !!(
         p.name === 'gemini' ? (process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_1) :
+        p.name === 'groq' ? process.env.GROQ_API_KEY :
         p.name === 'anthropic' ? process.env.ANTHROPIC_API_KEY :
         p.name === 'huggingface' ? (process.env.HF_TOKEN || process.env.HF_TOKEN_1) :
-        p.name === 'nvidia' ? process.env.NVIDIA_API_KEY :
+        p.name === 'nvidia' ? (process.env.NVIDIA_API_KEY || process.env.NVIDIA_API_KEY_1) :
         false
       )
     }))
