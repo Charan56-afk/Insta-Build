@@ -6369,16 +6369,16 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
             grid.innerHTML = projects.map(p => {
                 const pid = p._id || p.id;
                 return `
-    <div class="proj-card">
-      <div class="proj-card-top" onclick='loadSavedProject("${pid}")'>
+    <div class="proj-card" onclick='loadSavedProject("${pid}")'>
+      <div class="proj-card-top">
         <div class="proj-name">${esc(p.name)}</div>
         <div class="proj-type">app</div>
       </div>
-      <div class="proj-desc" onclick='loadSavedProject("${pid}")'>${esc(p.idea)}</div>
+      <div class="proj-desc">${esc(p.idea)}</div>
       <div class="proj-meta">
         <span>${p.timestamp}</span>
         <span style="display:flex;gap:8px;">
-          <span style="color:var(--accent);cursor:pointer;" onclick='loadSavedProject("${pid}")'>view →</span>
+          <span style="color:var(--accent);">view →</span>
           <span style="color:#8b5cf6;cursor:pointer;font-weight:600;" onclick='event.stopPropagation();openProjectInIde("${pid}")'>💻 IDE</span>
         </span>
       </div>
@@ -6416,7 +6416,7 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
         }
 
         async function openProjectInIde(id) {
-            const proj = projects.find(p => p.id === id || p._id === id);
+            const proj = projects.find(p => (p.id != null && String(p.id) === String(id)) || (p._id != null && String(p._id) === String(id)));
             if (!proj) return;
             currentBuildData = {
                 id: proj._id || proj.id,
@@ -6428,7 +6428,7 @@ Include sections: HERO, PROBLEM (3 bullets), SOLUTION (3 bullets), FEATURES (4 k
         }
 
         function loadSavedProject(id) {
-            const proj = projects.find(p => p.id === id || p._id === id);
+            const proj = projects.find(p => (p.id != null && String(p.id) === String(id)) || (p._id != null && String(p._id) === String(id)));
             if (!proj) return;
 
             currentBuildData = {
